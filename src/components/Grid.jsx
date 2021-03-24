@@ -1,48 +1,50 @@
 import React from "react";
 import Node from "../Pathfinder/Node/Node";
 
+import iniGrid from "../helpers/gridHelpers";
+
 import "../Styles/Grid.css";
 
-const START_NODE_ROW = 7;
-const START_NODE_COL = 5;
+// const START_NODE_ROW = 7;
+// const START_NODE_COL = 5;
 
-const FINISH_NODE_ROW = 7;
-const FINISH_NODE_COL = 45;
+// const FINISH_NODE_ROW = 7;
+// const FINISH_NODE_COL = 45;
 
-const createNode = (row, col) => {
-  const node = {
-    row,
-    col,
-    isStart: row === START_NODE_ROW && col === START_NODE_COL,
-    isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
-    distance: Infinity,
-    isVisited: false,
-    isWall: false,
-    previousNode: null,
-  };
+// const createNode = (row, col) => {
+//   const node = {
+//     row,
+//     col,
+//     isStart: row === START_NODE_ROW && col === START_NODE_COL,
+//     isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
+//     distance: Infinity,
+//     isVisited: false,
+//     isWall: false,
+//     previousNode: null,
+//   };
 
-  return node;
-};
+//   return node;
+// };
 
 // create the initial array of node objects
-const iniGrid = () => {
-  const grid = [];
+// const iniGrid = () => {
+//   const grid = [];
 
-  // for each row in the grid...
-  for (let row = 0; row < 15; row++) {
-    const currentRow = [];
+//   // for each row in the grid...
+//   for (let row = 0; row < 15; row++) {
+//     const currentRow = [];
 
-    // for each column in the row...
-    for (let col = 0; col < 50; col++) {
-      // create node and push
-      currentRow.push(createNode(row, col));
-    }
+//     // for each column in the row...
+//     for (let col = 0; col < 50; col++) {
+//       // create node and push
+//       currentRow.push(createNode(row, col));
+//     }
 
-    grid.push(currentRow);
-  }
+//     grid.push(currentRow);
+//   }
 
-  return grid;
-};
+//   return grid;
+// };
 
 export default function Grid() {
   // const [nodes, setNodes] = useState([])
