@@ -3,34 +3,56 @@ import Node from "../Pathfinder/Node/Node";
 
 import "../Styles/Grid.css";
 
-export default function Grid() {
-  // const [nodes, setNodes] = useState([])
+const START_NODE_ROW = 7;
+const START_NODE_COL = 5;
 
-  const iniGrid = [];
+const FINISH_NODE_ROW = 7;
+const FINISH_NODE_COL = 45;
 
+const createNode = (row, col) => {
+  const node = {
+    row,
+    col,
+    isStart: row === START_NODE_ROW && col === START_NODE_COL,
+    isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
+    distance: Infinity,
+    isVisited: false,
+    isWall: false,
+    previousNode: null,
+  };
+
+  return node;
+};
+
+// create the initial array of node objects
+const iniGrid = () => {
+  const grid = [];
+
+  // for each row in the grid...
   for (let row = 0; row < 15; row++) {
     const currentRow = [];
 
+    // for each column in the row...
     for (let col = 0; col < 50; col++) {
-      const currentNode = {
-        row,
-        col,
-        isStart: row === 7 && col === 5,
-        isFinish: row === 7 && col === 45,
-      };
-      currentRow.push(currentNode);
+      // create node and push
+      currentRow.push(createNode(row, col));
     }
 
-    iniGrid.push(currentRow);
+    grid.push(currentRow);
   }
 
-  const grid = iniGrid.map((row, rowIndex) => {
+  return grid;
+};
+
+export default function Grid() {
+  // const [nodes, setNodes] = useState([])
+
+  const grid = iniGrid().map((row, rowIndex) => {
     return row.map((node, nodeIndex) => {
       return (
         <Node key={nodeIndex} isStart={node.isStart} isFinish={node.isFinish} />
       );
     });
   });
-
   return <div className="Grid">{grid}</div>;
 }
