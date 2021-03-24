@@ -1,10 +1,13 @@
 import React from "react";
 import "./Node.css";
+const classNames = require("classnames");
 
 export default function Node(props) {
-  const { isStart, isFinish } = props;
+  // const { isStart, isFinish } = props;
+  const classes = classNames("Node", {
+    "node-start": props.isStart,
+    "node-finish": props.isFinish,
+  });
 
-  const extraClassName = isStart ? "node-start" : isFinish ? "node-finish" : "";
-
-  return <div className={`Node, ${extraClassName}`}></div>;
+  return <div className={classes}></div>;
 }
