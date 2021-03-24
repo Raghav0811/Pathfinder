@@ -7,6 +7,7 @@ export default function Node(props) {
   const classes = classNames("Node", {
     "node-start": props.isStart,
     "node-finish": props.isFinish,
+    "node-visited": props.isVisited,
   });
 
   return <div className={classes}></div>;
