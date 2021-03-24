@@ -44,7 +44,7 @@ const removeNestedNodes = (grid) => {
   return nodes;
 };
 
-export default function dijkstra(grid, startNode, finishNode) {
+export default function djikstra(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
   startNode.distance = 0;
   const unvisitedNodes = removeNestedNodes(grid);
