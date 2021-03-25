@@ -15,9 +15,8 @@ const getUnvisitedNeighbours = (node, grid) => {
   if (col > 0) {
     neighbours.push(grid[row][col - 1]);
   }
-  neighbours.filter((neighbour) => !neighbour.isVisited); // ensure the node has not been visited before
-
-  return neighbours;
+  // ensure the node has not been visited before
+  return neighbours.filter((neighbour) => !neighbour.isVisited);
 };
 const updateUnvisitedNeighbours = (node, grid) => {
   const unvisitedNeighbours = getUnvisitedNeighbours(node, grid);
@@ -70,30 +69,45 @@ export function djikstra(grid, startNode, finishNode) {
 const getShortestPathNodes = (finishNode) => {
   const path = [];
 
-  let curretNode = finishNode;
+  let currentNode = finishNode;
 
-  while (curretNode) {
-    path.unshift(curretNode);
-    curretNode = curretNode.previousNode;
+  path.unshift(currentNode);
+
+  while (currentNode) {
+    path.unshift(currentNode);
+    currentNode = currentNode.previousNode; // once we reach the start node, this becomes null and the loop breaks
   }
 
   return path;
 };
 
 const animateDjikstra = (visitedNodesInOrder, shortestPathNodes) => {
+  console.log(`array length: ${visitedNodesInOrder.length}`);
+
   for (let i = 0; i <= visitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
     if (i === visitedNodesInOrder.length) {
-      return;
+      setTimeout(() => {
+        animateShortestPath(shortestPathNodes);
+      }, 15 * i);
+    } else {
+      setTimeout(() => {
+        // for each node in the array, add the 'visited' class
+        const node = visitedNodesInOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).className +=
+          " node-visited";
+      }, 10 * i);
     }
+  }
+};
 
+const animateShortestPath = (shortestPathNodes) => {
+  for (let i = 0; i < shortestPathNodes.length; i++) {
     setTimeout(() => {
-      // for each node in the array, add the 'visited' class
-      const node = visitedNodesInOrder[i];
-
+      const node = shortestPathNodes[i];
       document.getElementById(`node-${node.row}-${node.col}`).className +=
-        " node-visited";
-    }, 5 * i);
+        " node-shortest-path";
+    }, 15 * i);
   }
 };
 
@@ -107,7 +121,7 @@ export function visualizeDjikstra(
   const startNode = grid[START_NODE_ROW][START_NODE_COL];
   const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
   const visitedNodesInOrder = djikstra(grid, startNode, finishNode);
-  // const shortestPathNodes = getShortestPathNodes(finishNode);
+  const shortestPathNodes = getShortestPathNodes(finishNode);
 
-  animateDjikstra(visitedNodesInOrder, "foo");
+  animateDjikstra(visitedNodesInOrder, shortestPathNodes);
 }

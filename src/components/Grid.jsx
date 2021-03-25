@@ -16,10 +16,15 @@ export default function Grid() {
 
   const grid = iniGrid();
 
-  const startNode = grid[START_NODE_ROW][START_NODE_COL];
-  const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+  //
 
-  console.log(djikstra(grid, startNode, finishNode));
+  visualizeDjikstra(
+    grid,
+    START_NODE_ROW,
+    START_NODE_COL,
+    FINISH_NODE_ROW,
+    FINISH_NODE_COL
+  );
 
   return (
     <div className="Grid">
