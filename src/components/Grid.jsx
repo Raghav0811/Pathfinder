@@ -2,14 +2,13 @@ import React from "react";
 import Node from "../Pathfinder/Node/Node";
 
 import {
-  START_NODE_COL,
   START_NODE_ROW,
-  FINISH_NODE_COL,
+  START_NODE_COL,
   FINISH_NODE_ROW,
+  FINISH_NODE_COL,
   iniGrid,
 } from "../helpers/gridHelpers";
-import djikstra from "../helpers/djikstraHelpers";
-
+import { djikstra, visualizeDjikstra } from "../helpers/djikstraHelpers";
 import "../Styles/Grid.css";
 
 export default function Grid() {
