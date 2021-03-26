@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import Node from "../Pathfinder/Node/Node";
-
 import {
   START_NODE_ROW,
   START_NODE_COL,
@@ -10,14 +9,8 @@ import {
 } from "../helpers/gridHelpers";
 import { djikstra, visualizeDjikstra } from "../helpers/djikstraHelpers";
 import "../Styles/Grid.css";
-
 export default function Grid() {
-  // const [nodes, setNodes] = useState([])
-
   const grid = iniGrid();
-
-  //
-
   visualizeDjikstra(
     grid,
     START_NODE_ROW,
@@ -30,12 +23,16 @@ export default function Grid() {
     <div className="Grid">
       {grid.map((row, rowIndex) => {
         return row.map((node, nodeIndex) => {
+          const { row, col, isStart, isFinish, isVisited, isWall } = node;
           return (
             <Node
               key={nodeIndex}
-              isStart={node.isStart}
-              isFinish={node.isFinish}
-              isVisited={node.isVisited}
+              row={row}
+              col={col}
+              isStart={isStart}
+              isFinish={isFinish}
+              isVisited={isVisited}
+              isWall={isWall}
             />
           );
         });

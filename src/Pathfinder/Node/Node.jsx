@@ -1,3 +1,5 @@
+import React from "react";
+import "./Node.css";
 const classNames = require("classnames");
 
 export default function Node(props) {

@@ -1,3 +1,5 @@
+import { START_NODE_ROW, START_NODE_COL } from "./gridHelpers";
+
 const getUnvisitedNeighbours = (node, grid) => {
   const neighbours = [];
 
@@ -83,13 +85,12 @@ const getShortestPathNodes = (finishNode) => {
 
 const animateDjikstra = (visitedNodesInOrder, shortestPathNodes) => {
   console.log(`array length: ${visitedNodesInOrder.length}`);
-
   for (let i = 0; i <= visitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
     if (i === visitedNodesInOrder.length) {
       setTimeout(() => {
         animateShortestPath(shortestPathNodes);
-      }, 15 * i);
+      }, 10 * i);
     } else {
       setTimeout(() => {
         // for each node in the array, add the 'visited' class
@@ -107,7 +108,7 @@ const animateShortestPath = (shortestPathNodes) => {
       const node = shortestPathNodes[i];
       document.getElementById(`node-${node.row}-${node.col}`).className +=
         " node-shortest-path";
-    }, 15 * i);
+    }, 50 * i);
   }
 };
 
