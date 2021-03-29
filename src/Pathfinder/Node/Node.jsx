@@ -1,5 +1,6 @@
 import React from "react";
 import "./Node.css";
+import makeWall from "../../helpers/wallHelpers";
 const classNames = require("classnames");
 
 export default function Node(props) {

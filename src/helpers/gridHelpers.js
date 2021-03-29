@@ -14,6 +14,9 @@ const createNode = (col, row) => {
     isVisited: false,
     isWall: false,
     previousNode: null,
+    onMouseDown: false,
+    onMouseEnter: false,
+    onMouseUp: false,
   };
 
   return node;
