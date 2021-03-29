@@ -1,6 +1,9 @@
 import React from "react";
 import "./Node.css";
-// import { fontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
+// import { faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 const classNames = require("classnames");
 
 export default function Node(props) {
@@ -26,12 +29,27 @@ export default function Node(props) {
     "node-wall": isWall,
   });
 
+  const mountStartIcon = () => {
+    if (isStart) {
+      return <FontAwesomeIcon icon={faLocationArrow} />;
+    }
+  };
+
+  const mountFinishIcon = () => {
+    if (isFinish) {
+      return <FontAwesomeIcon icon={faMapMarkerAlt} />;
+    }
+  };
+
   return (
     <div
       id={`node-${row}-${col}`}
       className={classes}
       onMouseEnter={checkGridPressed}
       onClick={() => toggleWall(row, col, !isWall, isStart, isFinish)}
-    ></div>
+    >
+      {mountStartIcon()}
+      {mountFinishIcon()}
+    </div>
   );
 }

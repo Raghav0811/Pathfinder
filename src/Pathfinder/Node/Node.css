@@ -18,11 +18,11 @@
   }
   
   .node-finish {
-    background-color: red;
+    /* background-color: red; */
   }
   
   .node-start {
-    background-color: green;
+    /* background-color: green; */
   }
   
   .node-shortest-path {
