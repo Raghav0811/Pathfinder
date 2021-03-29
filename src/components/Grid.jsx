@@ -25,6 +25,14 @@ export default function Grid() {
     setState((prev) => ({ ...prev, mousePressed: false }));
   };
 
+  function toggleNode(row, col, isWall, isStart, isFinish) {
+    if (!isStart && !isStart && !state.inProgress) {
+      toggleWall(row, col, isWall, isStart, isFinish);
+    } else {
+      return null;
+    }
+  }
+
   function toggleWall(row, col, isWall, isStart, isFinish) {
     if (!isStart && !isFinish && !state.inProgress) {
       const newNode = {
@@ -84,6 +92,7 @@ export default function Grid() {
               isWall={isWall}
               mousePressed={state.mousePressed}
               toggleWall={toggleWall}
+              toggleNode={toggleNode}
             />
           );
         });
