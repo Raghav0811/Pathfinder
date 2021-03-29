@@ -4,6 +4,12 @@
     border: 1px solid rgba(168, 168, 168, 0.5);
   }
   
+  .node-wall {
+    animation-name: wallAnimation;
+    animation-duration: 0.5s;
+    background-color: black;
+  }
+  
   .node-visited {
     animation-name: visitedAnimation;
     animation-duration: 1.5s;
@@ -96,5 +102,17 @@
     100% {
       background-color: #FFE600;
       border-color: #ebd301;
+    }
+  }
+  
+  @keyframes wallAnimation {
+    0% {
+      background-color: rgb(68, 68, 68);
+      transform: scale(0.2);
+    }
+  
+    100% {
+      background-color: black;
+      transform: scale(1);
     }
   }

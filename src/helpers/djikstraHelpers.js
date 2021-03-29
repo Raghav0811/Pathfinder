@@ -45,7 +45,7 @@ const removeNestedNodes = (grid) => {
   return nodes;
 };
 
-export function djikstra(grid, startNode, finishNode) {
+const djikstra = (grid, startNode, finishNode) => {
   const visitedNodesInOrder = [];
   startNode.distance = 0;
   const unvisitedNodes = removeNestedNodes(grid);
@@ -66,7 +66,7 @@ export function djikstra(grid, startNode, finishNode) {
     if (closestNode === finishNode) return visitedNodesInOrder; // algorithm complete, finished node has been found
     updateUnvisitedNeighbours(closestNode, grid);
   }
-}
+};
 
 const getShortestPathNodes = (finishNode) => {
   const path = [];
@@ -84,7 +84,6 @@ const getShortestPathNodes = (finishNode) => {
 };
 
 const animateDjikstra = (visitedNodesInOrder, shortestPathNodes) => {
-  console.log(`array length: ${visitedNodesInOrder.length}`);
   for (let i = 0; i <= visitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
     if (i === visitedNodesInOrder.length) {
@@ -112,7 +111,7 @@ const animateShortestPath = (shortestPathNodes) => {
   }
 };
 
-export function visualizeDjikstra(
+export default function visualizeDjikstra(
   grid,
   START_NODE_ROW,
   START_NODE_COL,
@@ -123,6 +122,7 @@ export function visualizeDjikstra(
   const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
   const visitedNodesInOrder = djikstra(grid, startNode, finishNode);
   const shortestPathNodes = getShortestPathNodes(finishNode);
+  animateDjikstra(visitedNodesInOrder, shortestPathNodes);
 
   animateDjikstra(visitedNodesInOrder, shortestPathNodes);
 }

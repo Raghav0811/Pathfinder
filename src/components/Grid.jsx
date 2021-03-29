@@ -7,21 +7,42 @@ import {
   FINISH_NODE_COL,
   iniGrid,
 } from "../helpers/gridHelpers";
-import { djikstra, visualizeDjikstra } from "../helpers/djikstraHelpers";
+import visualizeDjikstra from "../helpers/djikstraHelpers";
 import "../Styles/Grid.css";
 
 export default function Grid() {
-  const grid = iniGrid();
-
-  const [newGrid, setGrid] = useState({
-    grid: grid,
+  const [state, setState] = useState({
+    grid: iniGrid(),
     mousePressed: false,
+    inProgress: false,
   });
 
   const mouseDown = (row, col) => {
-    setGrid((prev) => ({ ...prev, mousePressed: true }));
-    console.log(newGrid.mousePressed);
+    setState((prev) => ({ ...prev, mousePressed: false }));
   };
+
+  const mouseUp = (row, col) => {
+    setState((prev) => ({ ...prev, mousePressed: false }));
+  };
+
+  function toggleWall(row, col, isWall, isStart, isFinish) {
+    if (!isStart && !isFinish && !state.inProgress) {
+      const newNode = {
+        ...state.grid[row][col],
+        isWall,
+      };
+
+      const newRow = [...state.grid[row]];
+      newRow[col] = newNode;
+
+      const grid = [...state.grid];
+      grid[row] = newRow;
+
+      setState((prev) => ({ ...prev, grid }));
+    } else {
+      return;
+    }
+  }
   //   visualizeDjikstra(
   //     grid,
   //     START_NODE_ROW,
@@ -36,8 +57,12 @@ export default function Grid() {
   }
 
   return (
-    <div className="Grid">
-      {newGrid.grid.map((row, rowIndex) => {
+    <div
+      className="Grid"
+      onMouseDown={() => mouseDown()}
+      onMouseUp={() => mouseUp()}
+    >
+      {state.grid.map((row, rowIndex) => {
         return row.map((node, nodeIndex) => {
           const {
             row,
@@ -46,7 +71,7 @@ export default function Grid() {
             isFinish,
             isVisited,
             isWall,
-            onMouseDown,
+            mousePressed,
           } = node;
           return (
             <Node
@@ -57,11 +82,26 @@ export default function Grid() {
               isFinish={isFinish}
               isVisited={isVisited}
               isWall={isWall}
-              onMouseDown={mouseDown}
+              mousePressed={state.mousePressed}
+              toggleWall={toggleWall}
             />
           );
         });
       })}
+      <button
+        onClick={() => {
+          setState((prev) => ({ ...prev, inProgress: true }));
+          visualizeDjikstra(
+            state.grid,
+            START_NODE_ROW,
+            START_NODE_COL,
+            FINISH_NODE_ROW,
+            FINISH_NODE_COL
+          );
+        }}
+      >
+        Hi Everyone
+      </button>
     </div>
   );
 }

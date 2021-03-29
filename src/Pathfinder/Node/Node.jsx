@@ -1,10 +1,24 @@
 import React from "react";
 import "./Node.css";
-import makeWall from "../../helpers/wallHelpers";
+// import { fontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const classNames = require("classnames");
 
 export default function Node(props) {
-  const { row, col, isStart, isFinish, isVisited, isWall } = props;
+  const {
+    row,
+    col,
+    isStart,
+    isFinish,
+    isWall,
+    mousePressed,
+    toggleWall,
+  } = props;
+
+  const checkGridPressed = () => {
+    if (mousePressed) {
+      toggleWall(row, col, !isWall, isStart, isFinish);
+    }
+  };
 
   const classes = classNames("Node", {
     "node-start": isStart,
@@ -12,5 +26,12 @@ export default function Node(props) {
     "node-wall": isWall,
   });
 
-  return <div id={`node-${row}-${col}`} className={classes}></div>;
+  return (
+    <div
+      id={`node-${row}-${col}`}
+      className={classes}
+      onMouseEnter={checkGridPressed}
+      onClick={() => toggleWall(row, col, !isWall, isStart, isFinish)}
+    ></div>
+  );
 }

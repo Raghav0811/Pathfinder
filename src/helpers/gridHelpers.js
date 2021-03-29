@@ -1,8 +1,8 @@
 const START_NODE_COL = 5;
 const START_NODE_ROW = 7;
 
-const FINISH_NODE_COL = 20;
 const FINISH_NODE_ROW = 14;
+const FINISH_NODE_COL = 30;
 
 const createNode = (col, row) => {
   const node = {
@@ -14,7 +14,7 @@ const createNode = (col, row) => {
     isVisited: false,
     isWall: false,
     previousNode: null,
-    onMouseDown: false,
+    mousedown: false,
     onMouseEnter: false,
     onMouseUp: false,
   };
