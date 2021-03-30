@@ -13,14 +13,26 @@ import "../Styles/Grid.css";
 export default function Grid() {
   const [state, setState] = useState({
     grid: iniGrid(),
+
     mousePressed: false,
+
     inProgress: false,
+
     hasStart: true,
-    hasFinish: false,
+
+    startRow: START_NODE_ROW,
+
+    startCol: START_NODE_COL,
+
+    hasFinish: true,
+
+    finishRow: FINISH_NODE_ROW,
+
+    finishCol: FINISH_NODE_COL,
   });
 
   const mouseDown = (row, col) => {
-    setState((prev) => ({ ...prev, mousePressed: false }));
+    setState((prev) => ({ ...prev, mousePressed: true }));
   };
 
   const mouseUp = (row, col) => {
@@ -28,32 +40,16 @@ export default function Grid() {
   };
 
   function toggleNode(row, col, isWall, isStart, isFinish) {
-    if (isStart || (!state.hasStart && !state.inProgress)) {
-      console.log("in is Start");
-      return toggleStart(row, col, isWall, isStart, isFinish);
-    } else if (isFinish) {
-      console.log("is finish");
-      return;
+    if (isStart || !state.hasStart) {
+      return toggleStart(row, col);
+    } else if (isFinish || !state.hasFinish) {
+      return toggleEnd(row, col);
     } else {
-      console.log("is wall");
       return toggleWall(row, col, isWall, isStart, isFinish);
     }
   }
 
-  function toggleStart(row, col, isWall, isStart, isFinish) {
-    if (isStart || (!state.hasStart && !state.inProgress)) {
-      console.log("is in finish");
-      return toggleStart(row, col, isWall, isStart, isFinish);
-    } else if (isFinish) {
-      console.log("is in finish");
-      return;
-    } else {
-      console.log("isWall");
-      return toggleWall(row, col, isWall, isStart, isFinish);
-    }
-  }
-
-  function toggleWall(row, col, isWall, isStart, isFinish) {
+  function toggleStart(row, col) {
     if (state.hasStart) {
       const newNode = {
         ...state.grid[row][col],
@@ -69,7 +65,8 @@ export default function Grid() {
       let hasStart = false;
 
       setState((prev) => ({ ...prev, grid, hasStart }));
-      console.log(state.grid);
+
+      return;
     } else {
       const newNode = {
         ...state.grid[row][col],
@@ -80,26 +77,86 @@ export default function Grid() {
       newRow[col] = newNode;
 
       const grid = [...state.grid];
+
       grid[row] = newRow;
 
-      let hasStart = true;
+      const hasStart = true;
 
-      setState((prev) => ({ ...prev, grid, hasStart }));
-      console.log(state.grid);
+      const startRow = row;
+
+      const startCol = col;
+
+      setState((prev) => ({ ...prev, grid, hasStart, startRow, startCol }));
+
+      return;
     }
-    return;
   }
-  //   visualizeDjikstra(
-  //     grid,
-  //     START_NODE_ROW,
-  //     START_NODE_COL,
-  //     FINISH_NODE_ROW,
-  //     FINISH_NODE_COL
-  //   );
 
-  function toWall(node) {
-    node.isWall = !node.isWall;
-    console.log("clicked a node");
+  function toggleEnd(row, col) {
+    if (state.hasFinish) {
+      const newNode = {
+        ...state.grid[row][col],
+
+        isFinish: false,
+      };
+
+      const newRow = [...state.grid[row]];
+
+      newRow[col] = newNode;
+
+      const grid = [...state.grid];
+
+      grid[row] = newRow;
+
+      let hasFinish = false;
+
+      setState((prev) => ({ ...prev, grid, hasFinish }));
+
+      return;
+    } else {
+      const newNode = {
+        ...state.grid[row][col],
+
+        isFinish: true,
+      };
+
+      const newRow = [...state.grid[row]];
+
+      newRow[col] = newNode;
+
+      const grid = [...state.grid];
+
+      grid[row] = newRow;
+
+      const hasFinish = true;
+
+      const finishRow = row;
+
+      const finishCol = col;
+
+      setState((prev) => ({ ...prev, grid, hasFinish, finishRow, finishCol }));
+
+      return;
+    }
+  }
+
+  function toggleWall(row, col, isWall, isStart, isFinish) {
+    if (!isStart && !isFinish && !state.inProgress) {
+      const newNode = {
+        ...state.grid[row][col],
+        isWall,
+      };
+
+      const newRow = [...state.grid[row]];
+      newRow[col] = newNode;
+
+      const grid = [...state.grid];
+      grid[row] = newRow;
+
+      setState((prev) => ({ ...prev, grid }));
+    } else {
+      return;
+    }
   }
 
   return (
@@ -129,25 +186,26 @@ export default function Grid() {
               isVisited={isVisited}
               isWall={isWall}
               mousePressed={state.mousePressed}
-              toggleWall={toggleWall}
               toggleNode={toggleNode}
             />
           );
         });
       })}
+
       <button
         onClick={() => {
           setState((prev) => ({ ...prev, inProgress: true }));
+
           visualizeDjikstra(
             state.grid,
-            START_NODE_ROW,
-            START_NODE_COL,
-            FINISH_NODE_ROW,
-            FINISH_NODE_COL
+            state.startRow,
+            state.startCol,
+            state.finishRow,
+            state.finishCol
           );
         }}
       >
-        Hi Everyone
+        Please Work!
       </button>
     </div>
   );

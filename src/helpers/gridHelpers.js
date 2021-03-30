@@ -1,5 +1,5 @@
-const START_NODE_COL = 5;
-const START_NODE_ROW = 7;
+const START_NODE_COL = 3;
+const START_NODE_ROW = 3;
 
 const FINISH_NODE_ROW = 14;
 const FINISH_NODE_COL = 30;
@@ -9,8 +9,7 @@ const createNode = (col, row) => {
     col,
     row,
     isStart: col === START_NODE_COL && row === START_NODE_ROW,
-    isFinish: false,
-    // col === FINISH_NODE_COL && row === FINISH_NODE_ROW,
+    isFinish: col === FINISH_NODE_COL && row === FINISH_NODE_ROW,
     distance: Infinity,
     isVisited: false,
     isWall: false,
