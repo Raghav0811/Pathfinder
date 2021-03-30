@@ -39,16 +39,12 @@ const iniGrid = () => {
 };
 
 const resetCss = (grid, inProgress) => {
-  if (!inProgress) {
-    grid.forEach((row) => {
-      row.forEach((node) => {
-        document.getElementById(`node-${node.row}-${node.col}`).className =
-          "Node";
-      });
+  grid.forEach((row) => {
+    row.forEach((node) => {
+      document.getElementById(`node-${node.row}-${node.col}`).className =
+        "Node";
     });
-  } else {
-    return;
-  }
+  });
 };
 
 export {

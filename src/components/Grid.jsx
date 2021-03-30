@@ -176,15 +176,19 @@ export default function Grid() {
       })}
       <button
         onClick={() => {
-          setState((prev) => ({ ...prev, inProgress: true }));
-          visualizeDjikstra(
-            state.grid,
-            state.startRow,
-            state.startCol,
-            state.finishRow,
-            state.finishCol,
-            setState
-          );
+          if (state.inProgress === true) {
+            return;
+          } else {
+            setState((prev) => ({ ...prev, inProgress: true }));
+            visualizeDjikstra(
+              state.grid,
+              state.startRow,
+              state.startCol,
+              state.finishRow,
+              state.finishCol,
+              setState
+            );
+          }
         }}
       >
         Please Work!
@@ -192,13 +196,13 @@ export default function Grid() {
       <button
         onClick={() => {
           //   setState((prev) => ({ ...prev, inProgress: false }));
-          if (!state.inProgress) {
-            resetCss(state.grid, state.inProgress);
+          if (!state.inProgress === "done") {
+            resetCss(state.grid);
             setState((prev) => ({
               ...prev,
               grid: iniGrid(),
               mousePressed: false,
-              //   inProgress: false,
+              inProgress: false,
               hasStart: true,
               startRow: START_NODE_ROW,
               startCol: START_NODE_COL,
