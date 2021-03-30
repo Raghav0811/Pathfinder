@@ -68,7 +68,7 @@ const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
     // once all nodes are animated, animate the shortest path
     if (i === visitedNodesInOrder.length) {
       setTimeout(() => {
-        animateShortestPath(shortestPathNodes);
+        animateShortestPath(shortestPathNodes, setState);
         setState((prev) => ({ ...prev, inProgress: false }));
       }, 10 * i);
     } else {
@@ -81,13 +81,18 @@ const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
     }
   }
 };
-const animateShortestPath = (shortestPathNodes) => {
+const animateShortestPath = (shortestPathNodes, setState) => {
   for (let i = 0; i < shortestPathNodes.length; i++) {
     setTimeout(() => {
       const node = shortestPathNodes[i];
       document.getElementById(`node-${node.row}-${node.col}`).className +=
         " node-shortest-path";
     }, 50 * i);
+    if (i === shortestPathNodes.length - 1) {
+      setTimeout(() => {
+        setState((prev) => ({ ...prev, inProgress: false }));
+      }, 51 * 1);
+    }
   }
 };
 

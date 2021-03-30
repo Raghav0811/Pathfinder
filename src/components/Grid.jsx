@@ -55,7 +55,7 @@ export default function Grid() {
       setState((prev) => ({ ...prev, grid }));
 
       //if the user clicks on a starting node, active node
-    } else if (isStart && !state.isStartPickup) {
+    } else if (isStart && !state.isStartPickup && !state.inProgress) {
       setState((prev) => ({ ...prev, isStartPickup: true }));
 
       //while user is dragging starting node, create new grid and change state
@@ -97,7 +97,7 @@ export default function Grid() {
       setState((prev) => ({ ...prev, isStartPickup: false }));
 
       //if the user clicks on a ending node, active node
-    } else if (isFinish && !state.isEndPickup) {
+    } else if (isFinish && !state.isEndPickup && !state.inProgress) {
       console.log("clicked");
       setState((prev) => ({ ...prev, isEndPickup: true }));
 
