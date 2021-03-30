@@ -15,6 +15,8 @@ export default function Grid() {
     grid: iniGrid(),
     mousePressed: false,
     inProgress: false,
+    hasStart: true,
+    hasFinish: false,
   });
 
   const mouseDown = (row, col) => {
@@ -26,18 +28,36 @@ export default function Grid() {
   };
 
   function toggleNode(row, col, isWall, isStart, isFinish) {
-    if (!isStart && !isStart && !state.inProgress) {
-      toggleWall(row, col, isWall, isStart, isFinish);
+    if (isStart || (!state.hasStart && !state.inProgress)) {
+      console.log("in is Start");
+      return toggleStart(row, col, isWall, isStart, isFinish);
+    } else if (isFinish) {
+      console.log("is finish");
+      return;
     } else {
-      return null;
+      console.log("is wall");
+      return toggleWall(row, col, isWall, isStart, isFinish);
+    }
+  }
+
+  function toggleStart(row, col, isWall, isStart, isFinish) {
+    if (isStart || (!state.hasStart && !state.inProgress)) {
+      console.log("is in finish");
+      return toggleStart(row, col, isWall, isStart, isFinish);
+    } else if (isFinish) {
+      console.log("is in finish");
+      return;
+    } else {
+      console.log("isWall");
+      return toggleWall(row, col, isWall, isStart, isFinish);
     }
   }
 
   function toggleWall(row, col, isWall, isStart, isFinish) {
-    if (!isStart && !isFinish && !state.inProgress) {
+    if (state.hasStart) {
       const newNode = {
         ...state.grid[row][col],
-        isWall,
+        isStart: false,
       };
 
       const newRow = [...state.grid[row]];
@@ -46,10 +66,28 @@ export default function Grid() {
       const grid = [...state.grid];
       grid[row] = newRow;
 
-      setState((prev) => ({ ...prev, grid }));
+      let hasStart = false;
+
+      setState((prev) => ({ ...prev, grid, hasStart }));
+      console.log(state.grid);
     } else {
-      return;
+      const newNode = {
+        ...state.grid[row][col],
+        isStart: true,
+      };
+
+      const newRow = [...state.grid[row]];
+      newRow[col] = newNode;
+
+      const grid = [...state.grid];
+      grid[row] = newRow;
+
+      let hasStart = true;
+
+      setState((prev) => ({ ...prev, grid, hasStart }));
+      console.log(state.grid);
     }
+    return;
   }
   //   visualizeDjikstra(
   //     grid,
