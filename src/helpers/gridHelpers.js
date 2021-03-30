@@ -38,10 +38,24 @@ const iniGrid = () => {
   return grid;
 };
 
+const resetCss = (grid, inProgress) => {
+  if (!inProgress) {
+    grid.forEach((row) => {
+      row.forEach((node) => {
+        document.getElementById(`node-${node.row}-${node.col}`).className =
+          "Node";
+      });
+    });
+  } else {
+    return;
+  }
+};
+
 export {
   START_NODE_COL,
   START_NODE_ROW,
   FINISH_NODE_COL,
   FINISH_NODE_ROW,
   iniGrid,
+  resetCss,
 };
