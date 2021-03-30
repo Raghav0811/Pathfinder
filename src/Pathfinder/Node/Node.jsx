@@ -14,12 +14,13 @@ export default function Node(props) {
     isFinish,
     isWall,
     mousePressed,
-    toggleNode,
+    toggleWall,
+    isStartPickup,
   } = props;
 
   const checkGridPressed = () => {
     if (mousePressed) {
-      toggleNode(row, col, !isWall, isStart, isFinish);
+      toggleWall(row, col, !isWall, isStart, isFinish, isStartPickup);
     }
   };
 
@@ -46,7 +47,7 @@ export default function Node(props) {
       id={`node-${row}-${col}`}
       className={classes}
       onMouseEnter={checkGridPressed}
-      onClick={() => toggleNode(row, col, !isWall, isStart, isFinish)}
+      onClick={() => toggleWall(row, col, !isWall, isStart, isFinish)}
     >
       {mountStartIcon()}
       {mountFinishIcon()}
