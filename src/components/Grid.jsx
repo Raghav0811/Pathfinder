@@ -18,8 +18,8 @@ export default function Grid() {
     inProgress: false,
     isStartPickup: false,
     isEndPickup: false,
-    startRow: 7,
-    startCol: 5,
+    startRow: 0,
+    startCol: 0,
     finishRow: 14,
     finishCol: 30,
   });
@@ -182,7 +182,8 @@ export default function Grid() {
             state.startRow,
             state.startCol,
             state.finishRow,
-            state.finishCol
+            state.finishCol,
+            setState
           );
         }}
       >
@@ -190,14 +191,14 @@ export default function Grid() {
       </button>
       <button
         onClick={() => {
-          setState((prev) => ({ ...prev, inProgress: false }));
+          //   setState((prev) => ({ ...prev, inProgress: false }));
           if (!state.inProgress) {
             resetCss(state.grid, state.inProgress);
             setState((prev) => ({
               ...prev,
               grid: iniGrid(),
               mousePressed: false,
-              inProgress: false,
+              //   inProgress: false,
               hasStart: true,
               startRow: START_NODE_ROW,
               startCol: START_NODE_COL,
