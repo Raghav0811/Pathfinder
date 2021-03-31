@@ -70,7 +70,7 @@ export default function Grid() {
           const currentRow = [];
 
           // for each column in the row...
-          for (let colValue = 0; colValue < 50; colValue++) {
+          for (let colValue = 0; colValue < 45; colValue++) {
             // resave all the nodes with a new isStart condition mapped to a new row and col value
             const newNode = {
               ...state.grid[rowArray][colValue],
@@ -113,7 +113,7 @@ export default function Grid() {
           const currentRow = [];
 
           // for each column in the row...
-          for (let colValue = 0; colValue < 50; colValue++) {
+          for (let colValue = 0; colValue < 45; colValue++) {
             // resave all the nodes with a new isStart condition mapped to a new row and col value
             const newNode = {
               ...state.grid[rowArray][colValue],

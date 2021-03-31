@@ -13,6 +13,15 @@ const getUnvisitedNeighbors = (node, grid) => {
 const updateUnvisitedNeighbors = (node, grid) => {
   const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
   for (const neighbor of unvisitedNeighbors) {
+    if (node.isWeighted) {
+      neighbor.distance = node.distance + 2;
+      neighbor.previousNode = node;
+    } else {
+      neighbor.distance = node.distance + 1;
+      neighbor.previousNode = node;
+    }
+  }
+  for (const neighbor of unvisitedNeighbors) {
     neighbor.distance = node.distance + 1;
     neighbor.previousNode = node;
   }
@@ -43,6 +52,7 @@ const djikstra = (grid, startNode, finishNode) => {
     if (closestNode.isWall) continue;
     if (closestNode.isWeighted) {
       setTimeout(() => {
+        if (closestNode.distance === Infinity) return visitedNodesInOrder;
         closestNode.isVisited = true;
         visitedNodesInOrder.push(closestNode);
 
@@ -54,7 +64,8 @@ const djikstra = (grid, startNode, finishNode) => {
     if (closestNode.distance === Infinity) return visitedNodesInOrder;
     closestNode.isVisited = true;
     visitedNodesInOrder.push(closestNode);
-    if (closestNode === finishNode) return visitedNodesInOrder; // algorithm complete, finished node has been found
+    if (closestNode === finishNode) return visitedNodesInOrder;
+    // algorithm complete, finished node has been found
     updateUnvisitedNeighbors(closestNode, grid);
   }
 };
