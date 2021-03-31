@@ -41,6 +41,15 @@ const djikstra = (grid, startNode, finishNode) => {
     sortNodesByDistance(unvisitedNodes);
     const closestNode = unvisitedNodes.shift(); // remove the first node in the array (i.e. one of the neighbors)
     if (closestNode.isWall) continue;
+    if (closestNode.isWeighted) {
+      setTimeout(() => {
+        closestNode.isVisited = true;
+        visitedNodesInOrder.push(closestNode);
+
+        if (closestNode === finishNode) return visitedNodesInOrder;
+        updateUnvisitedNeighbors(closestNode, grid);
+      }, 1000);
+    }
     // if the start node is completely surrounded by walls, we can't find any more neighbors (where distance isn't infinity) and are therefore stuck
     if (closestNode.distance === Infinity) return visitedNodesInOrder;
     closestNode.isVisited = true;

@@ -16,11 +16,21 @@ export default function Node(props) {
     mousePressed,
     toggleWall,
     isStartPickup,
+    isWeighted,
   } = props;
+  console.log(isWeighted);
 
   const checkGridPressed = () => {
     if (mousePressed) {
-      toggleWall(row, col, !isWall, isStart, isFinish, isStartPickup);
+      toggleWall(
+        row,
+        col,
+        !isWall,
+        isStart,
+        isFinish,
+        isStartPickup,
+        isWeighted
+      );
     }
   };
 
@@ -28,6 +38,7 @@ export default function Node(props) {
     "node-start": isStart,
     "node-finish": isFinish,
     "node-wall": isWall,
+    "node-weight": isWeighted,
   });
 
   const mountStartIcon = () => {
