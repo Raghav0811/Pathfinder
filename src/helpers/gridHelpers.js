@@ -13,7 +13,7 @@ const createNode = (col, row) => {
     distance: Infinity,
     isVisited: false,
     isWall: false,
-    isWeighted: row === 1,
+    isWeighted: (col === 0 && row === 5) || (col === 0 && row === 8),
     previousNode: null,
     mousedown: false,
     onMouseEnter: false,

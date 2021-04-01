@@ -14,7 +14,7 @@ const updateUnvisitedNeighbors = (node, grid) => {
   const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
   for (const neighbor of unvisitedNeighbors) {
     if (node.isWeighted) {
-      neighbor.distance = node.distance + 2;
+      neighbor.distance = node.distance + 3;
       neighbor.previousNode = node;
     } else {
       neighbor.distance = node.distance + 1;
@@ -48,7 +48,8 @@ const djikstra = (grid, startNode, finishNode) => {
   while (unvisitedNodes.length > 0) {
     // while there are still unvisited nodes...
     sortNodesByDistance(unvisitedNodes);
-    const closestNode = unvisitedNodes.shift(); // remove the first node in the array (i.e. one of the neighbors)
+    const closestNode = unvisitedNodes.shift();
+    console.log(closestNode.distance); // remove the first node in the array (i.e. one of the neighbors)
     if (closestNode.isWall) continue;
     // if (closestNode.isWeighted) {
     //   setTimeout(() => {
@@ -86,16 +87,9 @@ const getShortestPathNodes = (finishNode) => {
 const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
   for (let i = 0; i <= visitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
-    const clearWalls = () => {
-      const node = visitedNodesInOrder[i];
-      document.getElementById(`node-${node.row}-${node.col}`).className +=
-        " node-visited";
-    };
-
-    let timer;
+    const node = visitedNodesInOrder[i];
 
     if (i === visitedNodesInOrder.length) {
-      timer = clearInterval(timer);
       setTimeout(() => {
         animateShortestPath(shortestPathNodes, setState);
         return;
@@ -103,13 +97,10 @@ const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
     } else {
       setTimeout(() => {
         // for each node in the array, add the 'visited' class
-        const animateWalls = () => {
-          clearInterval(timer);
-          timer = setInterval(clearWalls, i);
-        };
-        const node = visitedNodesInOrder[i];
+
         if (node.isWeighted) {
-          animateWalls();
+          document.getElementById(`node-${node.row}-${node.col}`).className +=
+            "node-weight-visited";
         } else {
           document.getElementById(`node-${node.row}-${node.col}`).className +=
             " node-visited";
