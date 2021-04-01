@@ -50,16 +50,16 @@ const djikstra = (grid, startNode, finishNode) => {
     sortNodesByDistance(unvisitedNodes);
     const closestNode = unvisitedNodes.shift(); // remove the first node in the array (i.e. one of the neighbors)
     if (closestNode.isWall) continue;
-    if (closestNode.isWeighted) {
-      setTimeout(() => {
-        if (closestNode.distance === Infinity) return visitedNodesInOrder;
-        closestNode.isVisited = true;
-        visitedNodesInOrder.push(closestNode);
+    // if (closestNode.isWeighted) {
+    //   setTimeout(() => {
+    //     if (closestNode.distance === Infinity) return visitedNodesInOrder;
+    //     closestNode.isVisited = true;
+    //     visitedNodesInOrder.push(closestNode);
 
-        if (closestNode === finishNode) return visitedNodesInOrder;
-        updateUnvisitedNeighbors(closestNode, grid);
-      }, 1000);
-    }
+    //     if (closestNode === finishNode) return visitedNodesInOrder;
+    //     updateUnvisitedNeighbors(closestNode, grid);
+    //   }, 1000);
+    // }
     // if the start node is completely surrounded by walls, we can't find any more neighbors (where distance isn't infinity) and are therefore stuck
     if (closestNode.distance === Infinity) return visitedNodesInOrder;
     closestNode.isVisited = true;
@@ -95,12 +95,20 @@ const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
       setTimeout(() => {
         // for each node in the array, add the 'visited' class
         const node = visitedNodesInOrder[i];
-        document.getElementById(`node-${node.row}-${node.col}`).className +=
-          " node-visited";
+        if (!node.isWeighted) {
+          document.getElementById(`node-${node.row}-${node.col}`).className +=
+            " node-visited";
+        } else {
+          setTimeout(() => {
+            document.getElementById(`node-${node.row}-${node.col}`).className +=
+              "node-visited";
+          }, 500 * i);
+        }
       }, 10 * i);
     }
   }
 };
+
 const animateShortestPath = (shortestPathNodes, setState) => {
   for (let i = 0; i < shortestPathNodes.length; i++) {
     setTimeout(() => {

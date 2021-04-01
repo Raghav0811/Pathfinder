@@ -18,7 +18,6 @@ export default function Node(props) {
     isStartPickup,
     isWeighted,
   } = props;
-  console.log(isWeighted);
 
   const checkGridPressed = () => {
     if (mousePressed) {
