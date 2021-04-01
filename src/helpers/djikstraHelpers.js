@@ -86,23 +86,33 @@ const getShortestPathNodes = (finishNode) => {
 const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
   for (let i = 0; i <= visitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
+    const clearWalls = () => {
+      const node = visitedNodesInOrder[i];
+      document.getElementById(`node-${node.row}-${node.col}`).className +=
+        " node-visited";
+    };
+
+    let timer;
+
     if (i === visitedNodesInOrder.length) {
+      timer = clearInterval(timer);
       setTimeout(() => {
         animateShortestPath(shortestPathNodes, setState);
-        setState((prev) => ({ ...prev, inProgress: false }));
+        return;
       }, 10 * i);
     } else {
       setTimeout(() => {
         // for each node in the array, add the 'visited' class
+        const animateWalls = () => {
+          clearInterval(timer);
+          timer = setInterval(clearWalls, i);
+        };
         const node = visitedNodesInOrder[i];
-        if (!node.isWeighted) {
+        if (node.isWeighted) {
+          animateWalls();
+        } else {
           document.getElementById(`node-${node.row}-${node.col}`).className +=
             " node-visited";
-        } else {
-          setTimeout(() => {
-            document.getElementById(`node-${node.row}-${node.col}`).className +=
-              "node-visited";
-          }, 500 * i);
         }
       }, 10 * i);
     }
