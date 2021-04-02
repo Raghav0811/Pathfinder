@@ -22,6 +22,8 @@ export default function Grid() {
     startCol: 0,
     finishRow: 14,
     finishCol: 30,
+    makeWall: true,
+    makeWeight: false,
   });
 
   const mouseDown = (row, col) => {
@@ -39,11 +41,32 @@ export default function Grid() {
       !isFinish &&
       !state.inProgress &&
       !state.isStartPickup &&
-      !state.isEndPickup
+      !state.isEndPickup &&
+      state.makeWall
     ) {
       const newNode = {
         ...state.grid[row][col],
         isWall,
+      };
+      const newRow = [...state.grid[row]];
+      newRow[col] = newNode;
+      const grid = [...state.grid];
+      grid[row] = newRow;
+
+      setState((prev) => ({ ...prev, grid }));
+
+      //if the user clicks on an empty square and the state is set to make weight, then create a weight
+    } else if (
+      !isStart &&
+      !isFinish &&
+      !state.inProgress &&
+      !state.isStartPickup &&
+      !state.isEndPickup &&
+      state.makeWeight
+    ) {
+      const newNode = {
+        ...state.grid[row][col],
+        isWeighted: true,
       };
 
       const newRow = [...state.grid[row]];
@@ -57,32 +80,25 @@ export default function Grid() {
       //if the user clicks on a starting node, active node
     } else if (isStart && !state.isStartPickup && !state.inProgress) {
       setState((prev) => ({ ...prev, isStartPickup: true }));
-
       //while user is dragging starting node, create new grid and change state
     } else if (state.isStartPickup && state.mousePressed) {
       console.log(row, col);
-
       const setNewStart = () => {
         const grid = [];
-
         // for each row in the grid...
         for (let rowArray = 0; rowArray < 15; rowArray++) {
           const currentRow = [];
-
           // for each column in the row...
-          for (let colValue = 0; colValue < 45; colValue++) {
+          for (let colValue = 0; colValue < 50; colValue++) {
             // resave all the nodes with a new isStart condition mapped to a new row and col value
             const newNode = {
               ...state.grid[rowArray][colValue],
               isStart: rowArray === row && colValue === col,
             };
-
             currentRow.push(newNode);
           }
-
           grid.push(currentRow);
         }
-
         return grid;
       };
       setState((prev) => ({
@@ -91,51 +107,40 @@ export default function Grid() {
         startCol: col,
         grid: setNewStart(),
       }));
-
       //when user stops dragging the node, stop moving the node
     } else if (state.isStartPickup && !state.mousePressed) {
       setState((prev) => ({ ...prev, isStartPickup: false }));
-
       //if the user clicks on a ending node, active node
     } else if (isFinish && !state.isEndPickup && !state.inProgress) {
       console.log("clicked");
       setState((prev) => ({ ...prev, isEndPickup: true }));
-
       //while user is dragging ending node, create new grid and change state
     } else if (state.isEndPickup && state.mousePressed) {
       console.log(row, col);
-
       const setNewEnd = () => {
         const grid = [];
-
         // for each row in the grid...
         for (let rowArray = 0; rowArray < 15; rowArray++) {
           const currentRow = [];
-
           // for each column in the row...
-          for (let colValue = 0; colValue < 45; colValue++) {
+          for (let colValue = 0; colValue < 50; colValue++) {
             // resave all the nodes with a new isStart condition mapped to a new row and col value
             const newNode = {
               ...state.grid[rowArray][colValue],
               isFinish: rowArray === row && colValue === col,
             };
-
             currentRow.push(newNode);
           }
-
           grid.push(currentRow);
         }
-
         return grid;
       };
-
       setState((prev) => ({
         ...prev,
         finishRow: row,
         finishCol: col,
         grid: setNewEnd(),
       }));
-
       //when user is finished dragging ending node, create new grid and change state
     } else if (state.isEndPickup && !state.mousePressed) {
       setState((prev) => ({ ...prev, isEndPickup: false }));
@@ -158,7 +163,6 @@ export default function Grid() {
             isVisited,
             isWall,
             isWeighted,
-            mousePressed,
           } = node;
           return (
             <Node
@@ -197,6 +201,25 @@ export default function Grid() {
       </button>
       <button
         onClick={() => {
+          if (!state.inProgress && state.makeWall) {
+            setState((prev) => ({
+              ...prev,
+              makeWall: false,
+              makeWeight: true,
+            }));
+          } else {
+            setState((prev) => ({
+              ...prev,
+              makeWall: true,
+              makeWeight: false,
+            }));
+          }
+        }}
+      >
+        {state.makeWall ? "Make weights" : "Make walls"}
+      </button>
+      <button
+        onClick={() => {
           //   setState((prev) => ({ ...prev, inProgress: false }));
           if (!state.inProgress === "done" || !state.inProgress) {
             resetCss(state.grid);
@@ -211,6 +234,8 @@ export default function Grid() {
               hasFinish: true,
               finishRow: FINISH_NODE_ROW,
               finishCol: FINISH_NODE_COL,
+              makeWall: true,
+              makeWeight: false,
             }));
           } else {
             return;

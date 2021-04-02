@@ -8,11 +8,10 @@
   animation-duration: 0.5s;
   background-color: #3d5c5c;
 }
-
 .node-weight-visited {
   animation-name: weightVisited;
   animation-duration: 4s;
-  background-color: #42C0FB;
+  background-color: #003366;
 }
 
 .node-wall {
@@ -119,18 +118,15 @@
     transform: scale(1);
   }
 }
-
 @keyframes weightVisited {
   0% {
     transform: scale(0.2);
     background-color: #3d5c5c;
   }
-
   50% {
     transform: scale(0.5);
     background-color: #3d5c5c;
   }
-
   75% {
     transform: scale(0.9);
     background-color: #3d5c5c;
@@ -138,7 +134,7 @@
 
   100% {
     transform: scale(1);
-    background-color: #42C0FB;
+    background-color: #003366;
     border: 1px solid #5acbffce
   }
 }
