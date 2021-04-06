@@ -1,13 +1,18 @@
 .Node {
-  width: 18px;
-  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
   border: 1px solid rgba(168, 168, 168, 0.5);
 }
+
 .node-weight {
   animation-name: weightAnimation;
   animation-duration: 0.5s;
   background-color: #3d5c5c;
 }
+
 .node-weight-visited {
   animation-name: weightVisited;
   animation-duration: 4s;
@@ -16,7 +21,7 @@
 
 .node-wall {
   animation-name: wallAnimation;
-  animation-duration: 0.5s;
+  animation-duration: 0.3s;
   background-color: black;
 }
 .node-visited {
@@ -103,30 +108,35 @@
 @keyframes wallAnimation {
   0% {
     background-color: rgb(68, 68, 68);
-    transform: scale(0.2);
+    transform: scale(0.5);
   }
   100% {
     background-color: black;
     transform: scale(1);
   }
 }
+
 @keyframes weightAnimation {
   0% {
     transform: scale(0.2);
   }
+
   100% {
     transform: scale(1);
   }
 }
+
 @keyframes weightVisited {
   0% {
     transform: scale(0.2);
     background-color: #3d5c5c;
   }
+
   50% {
     transform: scale(0.5);
     background-color: #3d5c5c;
   }
+
   75% {
     transform: scale(0.9);
     background-color: #3d5c5c;

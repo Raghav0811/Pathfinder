@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Node.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
@@ -19,6 +19,7 @@ export default function Node(props) {
     isStartPickup,
     isFinishPickup,
     moveNode,
+    isWeight,
   } = props;
 
   const handleMouseEnter = () => {
