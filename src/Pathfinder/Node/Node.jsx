@@ -15,21 +15,25 @@ export default function Node(props) {
     isWall,
     mousePressed,
     toggleWall,
+    togglePickup,
     isStartPickup,
-    isWeighted,
+    isFinishPickup,
+    moveNode,
   } = props;
 
-  const checkGridPressed = () => {
-    if (mousePressed) {
-      toggleWall(
-        row,
-        col,
-        !isWall,
-        isStart,
-        isFinish,
-        isStartPickup,
-        isWeighted
-      );
+  const handleMouseEnter = () => {
+    if (mousePressed && (isStartPickup || isFinishPickup)) {
+      moveNode(row, col, isStartPickup, isFinishPickup);
+    } else if (mousePressed && !isStart && !isFinish) {
+      toggleWall(row, col, !isWall);
+    }
+  };
+
+  const handleMouseDown = () => {
+    if (isStart || isFinish) {
+      togglePickup(row, col, isStart, isFinish);
+    } else {
+      toggleWall(row, col, !isWall);
     }
   };
 
@@ -37,27 +41,23 @@ export default function Node(props) {
     "node-start": isStart,
     "node-finish": isFinish,
     "node-wall": isWall,
-    "node-weight": isWeighted,
   });
-
   const mountStartIcon = () => {
     if (isStart) {
       return <FontAwesomeIcon icon={faLocationArrow} />;
     }
   };
-
   const mountFinishIcon = () => {
     if (isFinish) {
       return <FontAwesomeIcon icon={faMapMarkerAlt} />;
     }
   };
-
   return (
     <div
       id={`node-${row}-${col}`}
       className={classes}
-      onMouseEnter={checkGridPressed}
-      onMouseDown={() => toggleWall(row, col, !isWall, isStart, isFinish)}
+      onMouseEnter={handleMouseEnter}
+      onMouseDown={handleMouseDown}
     >
       {mountStartIcon()}
       {mountFinishIcon()}
