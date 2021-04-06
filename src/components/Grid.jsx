@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Node from "../Pathfinder/Node/Node";
 import useGridData from "../hooks/useGridData";
 import {
@@ -9,7 +9,7 @@ import {
   iniGrid,
   resetCss,
 } from "../helpers/gridHelpers";
-import visualizeDjikstra from "../helpers/djikstraHelpers";
+// import visualizeDjikstra from "../helpers/djikstraHelpers";
 import "../Styles/Grid.css";
 export default function Grid() {
   const {
