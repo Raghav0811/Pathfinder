@@ -19,7 +19,7 @@ export default function Node(props) {
     isStartPickup,
     isFinishPickup,
     moveNode,
-    isWeight,
+    isWeighted,
   } = props;
 
   const handleMouseEnter = () => {
@@ -42,6 +42,7 @@ export default function Node(props) {
     "node-start": isStart,
     "node-finish": isFinish,
     "node-wall": isWall,
+    "node-weight": isWeighted,
   });
   const mountStartIcon = () => {
     if (isStart) {
