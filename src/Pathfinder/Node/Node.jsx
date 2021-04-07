@@ -26,7 +26,7 @@ export default function Node(props) {
     if (mousePressed && (isStartPickup || isFinishPickup)) {
       moveNode(row, col, isStartPickup, isFinishPickup);
     } else if (mousePressed && !isStart && !isFinish) {
-      toggleWall(row, col, !isWall);
+      toggleWall(row, col, !isWall, !isWeighted);
     }
   };
 
@@ -34,7 +34,7 @@ export default function Node(props) {
     if (isStart || isFinish) {
       togglePickup(row, col, isStart, isFinish);
     } else {
-      toggleWall(row, col, !isWall);
+      toggleWall(row, col, !isWall, !isWeighted);
     }
   };
 

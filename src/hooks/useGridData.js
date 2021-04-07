@@ -33,6 +33,7 @@ export default function useGridData() {
       distance: Infinity,
       isVisited: false,
       isWall: false,
+      isWeighted: false,
       previousNode: null,
       mousedown: false,
       onMouseEnter: false,
@@ -81,13 +82,30 @@ export default function useGridData() {
       setFinishNode(newNode);
     }
   };
-  const toggleWall = (row, col, isWall) => {
+
+  const toggleWall = (row, col, isWall, isWeighted) => {
     //if the user clicks on an empty square, create a wall
-    if (!state.inProgress && !state.isPickup) {
+    if (!state.inProgress && state.makeWall) {
       const newNode = {
         ...state.grid[row][col],
         isWall,
+        isWeighted: false,
       };
+
+      const newRow = [...state.grid[row]];
+      newRow[col] = newNode;
+
+      const grid = [...state.grid];
+      grid[row] = newRow;
+
+      setState((prev) => ({ ...prev, grid }));
+    } else if (!state.inProgress && !state.makeWall) {
+      const newNode = {
+        ...state.grid[row][col],
+        isWeighted,
+        isWall: false,
+      };
+
       const newRow = [...state.grid[row]];
       newRow[col] = newNode;
       const grid = [...state.grid];
@@ -95,6 +113,7 @@ export default function useGridData() {
       setState((prev) => ({ ...prev, grid }));
     }
   };
+
   useEffect(() => {
     const oldGrid = [...state.grid];
     const grid = oldGrid.map((row, rowIndex) => {
