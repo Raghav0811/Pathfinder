@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import visualizeDjikstra from "../helpers/djikstraHelpers";
+import visualizeBfs from "../helpers/breadthFirst";
+
 export default function useGridData() {
   const [startNode, setStartNode] = useState({ row: 7, col: 4 });
   const [finishNode, setFinishNode] = useState({ row: 7, col: 40 });
@@ -174,7 +176,8 @@ export default function useGridData() {
       return;
     } else {
       setState((prev) => ({ ...prev, inProgress: true }));
-      visualizeDjikstra(state.grid, startNode, finishNode, setState);
+      visualizeBfs(state.grid, startNode, finishNode, setState);
+      //   visualizeDjikstra(state.grid, startNode, finishNode, setState);
     }
   };
 
