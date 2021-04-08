@@ -102,15 +102,18 @@ export const animateDjikstra = (
       }, 10 * i);
     } else {
       setTimeout(() => {
-        // for each node in the array, add the 'visited' class
-
-        if (node.isWeighted) {
-          document.getElementById(`node-${node.row}-${node.col}`).className +=
-            "node-weight-visited";
-        } else {
-          document.getElementById(`node-${node.row}-${node.col}`).className +=
-            " node-visited";
+        if (node.lastRow) {
+          document.getElementById(
+            `node-${node.row}-${node.col}`
+          ).className += `node-visited-last-row`;
         }
+        if (node.lastCol) {
+          document.getElementById(
+            `node-${node.row}-${node.col}`
+          ).className += ` node=visited-last-col`;
+        }
+        document.getElementById(`node-${node.row}-${node.col}`).className +=
+          " node-visited";
       }, 10 * i);
     }
   }

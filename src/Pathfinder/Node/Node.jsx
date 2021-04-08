@@ -19,14 +19,16 @@ export default function Node(props) {
     isStartPickup,
     isFinishPickup,
     moveNode,
-    isWeighted,
+    isWeight,
+    lastRow,
+    lastCol,
   } = props;
 
   const handleMouseEnter = () => {
     if (mousePressed && (isStartPickup || isFinishPickup)) {
       moveNode(row, col, isStartPickup, isFinishPickup);
     } else if (mousePressed && !isStart && !isFinish) {
-      toggleWall(row, col, !isWall, !isWeighted);
+      toggleWall(row, col, !isWall, !isWeight);
     }
   };
 
@@ -34,7 +36,7 @@ export default function Node(props) {
     if (isStart || isFinish) {
       togglePickup(row, col, isStart, isFinish);
     } else {
-      toggleWall(row, col, !isWall, !isWeighted);
+      toggleWall(row, col, !isWall, !isWeight);
     }
   };
 
@@ -42,7 +44,9 @@ export default function Node(props) {
     "node-start": isStart,
     "node-finish": isFinish,
     "node-wall": isWall,
-    "node-weight": isWeighted,
+    "node-weight": isWeight,
+    "node-last-row": lastRow,
+    "node-last-col": lastCol,
   });
   const mountStartIcon = () => {
     if (isStart) {

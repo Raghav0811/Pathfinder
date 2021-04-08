@@ -35,9 +35,8 @@ export default function useGridData() {
       isWall: false,
       isWeighted: false,
       previousNode: null,
-      mousedown: false,
-      onMouseEnter: false,
-      onMouseUp: false,
+      lastRow: row === 14,
+      lastcol: col === 44,
     };
 
     return node;
@@ -49,7 +48,7 @@ export default function useGridData() {
     inProgress: false,
     isStartPickup: false,
     isFinishPickup: false,
-    makeWall: true,
+    drawWall: true,
     makeWeight: false,
   });
 
@@ -85,7 +84,7 @@ export default function useGridData() {
 
   const toggleWall = (row, col, isWall, isWeighted) => {
     //if the user clicks on an empty square, create a wall
-    if (!state.inProgress && state.makeWall) {
+    if (!state.inProgress && state.drawWall) {
       const newNode = {
         ...state.grid[row][col],
         isWall,
@@ -99,7 +98,7 @@ export default function useGridData() {
       grid[row] = newRow;
 
       setState((prev) => ({ ...prev, grid }));
-    } else if (!state.inProgress && !state.makeWall) {
+    } else if (!state.inProgress && !state.drawWall) {
       const newNode = {
         ...state.grid[row][col],
         isWeighted,
@@ -131,6 +130,7 @@ export default function useGridData() {
     });
     setState((prev) => ({ ...prev, grid }));
   }, [startNode, finishNode]);
+
   const resetGrid = () => {
     if (state.inProgress === true) {
       return;
@@ -144,7 +144,7 @@ export default function useGridData() {
         inProgress: false,
         isStartPickup: false,
         isFinishPickup: false,
-        makeWall: true,
+        drawWall: true,
         makeWeight: false,
       });
 
@@ -152,10 +152,23 @@ export default function useGridData() {
         row.forEach((node) => {
           document.getElementById(`node-${node.row}-${node.col}`).className =
             "Node";
+
+          if (node.lastRow) {
+            document.getElementById(
+              `node-${node.row}-${node.col}`
+            ).className += ` node-last-row`;
+          }
+
+          if (node.lastCol) {
+            document.getElementById(
+              `node-${node.row}-${node.col}`
+            ).className += ` node-last-col`;
+          }
         });
       });
     }
   };
+
   const startVisualization = () => {
     if (state.inProgress || state.inProgress === "done") {
       return;
@@ -166,9 +179,9 @@ export default function useGridData() {
   };
 
   const toggleWeight = () => {
-    if (!state.inProgress && state.makeWall) {
+    if (!state.inProgress && state.drawWall) {
       setState((prev) => ({ ...prev, makeWall: false, makeWeight: true }));
-    } else if (!state.inProgress && !state.makeWall) {
+    } else if (!state.inProgress && !state.drawWall) {
       setState((prev) => ({ ...prev, makeWall: true, makeWeight: false }));
     }
   };

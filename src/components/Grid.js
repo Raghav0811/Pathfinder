@@ -1,5 +1,7 @@
 import React from "react";
 import Node from "../Pathfinder/Node/Node";
+import BasicButton from "./BasicButton";
+import Toggle from "./Toggle";
 import useGridData from "../hooks/useGridData";
 import {
   START_NODE_ROW,
@@ -14,6 +16,7 @@ import "../Styles/Grid.css";
 export default function Grid() {
   const {
     state,
+    setSate,
     mouseDown,
     mouseUp,
     togglePickup,
@@ -21,6 +24,7 @@ export default function Grid() {
     moveNode,
     resetGrid,
     startVisualization,
+    toggleWeight,
   } = useGridData();
   // export default function Grid() {
   //   const [state, setState] = useState({
@@ -159,31 +163,63 @@ export default function Grid() {
   //   }
 
   return (
-    <div className="Grid" onMouseDown={mouseDown} onMouseUp={mouseUp}>
-      {state.grid.map((row, rowIndex) => {
-        return row.map((node, nodeIndex) => {
-          const { row, col, isStart, isFinish, isVisited, isWall } = node;
-          return (
-            <Node
-              key={nodeIndex}
-              row={row}
-              col={col}
-              isStart={isStart}
-              isFinish={isFinish}
-              isVisited={isVisited}
-              isWall={isWall}
-              mousePressed={state.mousePressed}
-              toggleWall={toggleWall}
-              togglePickup={togglePickup}
-              isStartPickup={state.isStartPickup}
-              isFinishPickup={state.isFinishPickup}
-              moveNode={moveNode}
-            />
-          );
-        });
-      })}
-      <button onClick={startVisualization}>Please Work!</button>
-      <button onClick={resetGrid}>Refresh</button>
+    <div>
+      <div className="ToolBar">
+        <section className="Buttons">
+          <BasicButton
+            text="Visualize"
+            size="large"
+            color="primary"
+            onClick={startVisualization}
+          />
+          <BasicButton
+            text="Reset Grid"
+            size="small"
+            color="secondary"
+            onClick={resetGrid}
+          />
+        </section>
+        <section className="Toggle">
+          <Toggle drawWall={state.drawWall} toggleWeight={toggleWeight} />
+        </section>
+      </div>
+      <div className="Grid" onMouseDown={mouseDown} onMouseUp={mouseUp}>
+        {state.grid.map((row, rowIndex) => {
+          return row.map((node, nodeIndex) => {
+            const {
+              row,
+              col,
+              isStart,
+              isFinish,
+              isVisited,
+              isWall,
+              isWeight,
+              lastRow,
+              lastCol,
+            } = node;
+            return (
+              <Node
+                key={nodeIndex}
+                row={row}
+                col={col}
+                isStart={isStart}
+                isFinish={isFinish}
+                isVisited={isVisited}
+                isWall={isWall}
+                isWeight={isWeight}
+                lastRow={lastRow}
+                lastCol={lastCol}
+                mousePressed={state.mousePressed}
+                toggleWall={toggleWall}
+                togglePickup={togglePickup}
+                isStartPickup={state.isStartPickup}
+                isFinishPickup={state.isFinishPickup}
+                moveNode={moveNode}
+              />
+            );
+          });
+        })}
+      </div>
     </div>
   );
 }
