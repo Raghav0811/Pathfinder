@@ -1,4 +1,3 @@
-// import { START_NODE_ROW, START_NODE_COL } from "./gridHelpers";
 // get the unvisited neighboring nodes for the node being analyzed
 const getUnvisitedNeighbors = (node, grid) => {
   const neighbors = [];
@@ -12,18 +11,15 @@ const getUnvisitedNeighbors = (node, grid) => {
 // establish the neighbors for the new node being analyzed by changing distance from infinity to 0
 const updateUnvisitedNeighbors = (node, grid) => {
   const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
+
   for (const neighbor of unvisitedNeighbors) {
-    if (node.isWeighted) {
-      neighbor.distance = node.distance + 3;
+    if (node.isWeight) {
+      neighbor.distance = node.distance + 2;
       neighbor.previousNode = node;
     } else {
       neighbor.distance = node.distance + 1;
       neighbor.previousNode = node;
     }
-  }
-  for (const neighbor of unvisitedNeighbors) {
-    neighbor.distance = node.distance + 1;
-    neighbor.previousNode = node;
   }
 };
 // sort nodes by distance so that the neighboring nodes are at the beginning of the array
@@ -48,26 +44,15 @@ export const djikstra = (grid, startNode, finishNode) => {
   while (unvisitedNodes.length > 0) {
     // while there are still unvisited nodes...
     sortNodesByDistance(unvisitedNodes);
-    const closestNode = unvisitedNodes.shift();
-    console.log(closestNode.distance); // remove the first node in the array (i.e. one of the neighbors)
+    const closestNode = unvisitedNodes.shift(); // remove the first node in the array (i.e. one of the neighbors)
     if (closestNode.isWall) continue;
-    // if (closestNode.isWeighted) {
-    //   setTimeout(() => {
-    //     if (closestNode.distance === Infinity) return visitedNodesInOrder;
-    //     closestNode.isVisited = true;
-    //     visitedNodesInOrder.push(closestNode);
-
-    //     if (closestNode === finishNode) return visitedNodesInOrder;
-    //     updateUnvisitedNeighbors(closestNode, grid);
-    //   }, 1000);
-    // }
-    // if the start node is completely surrounded by walls, we can't find any more neighbors (where distance isn't infinity) and are therefore stuck
     if (closestNode.distance === Infinity) return visitedNodesInOrder;
     closestNode.isVisited = true;
     visitedNodesInOrder.push(closestNode);
-    if (closestNode === finishNode) return visitedNodesInOrder;
-    // algorithm complete, finished node has been found
+    if (closestNode === finishNode) return visitedNodesInOrder; // algorithm complete, finished node has been found
     updateUnvisitedNeighbors(closestNode, grid);
+
+    // if the start node is completely surrounded by walls, we can't find any more neighbors (where distance isn't infinity) and are therefore stuck
   }
 };
 // find the shortest path by starting at the end node and moving to node.previousNode
@@ -84,12 +69,7 @@ export const getShortestPathNodes = (finishNode) => {
   return path;
 };
 
-// const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
-export const animateDjikstra = (
-  visitedNodesInOrder,
-  shortestPathNodes,
-  setState
-) => {
+const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
   for (let i = 0; i <= visitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
     const node = visitedNodesInOrder[i];
@@ -97,21 +77,19 @@ export const animateDjikstra = (
     if (i === visitedNodesInOrder.length) {
       setTimeout(() => {
         animateShortestPath(shortestPathNodes, setState);
-        // animateShortestPath(shortestPathNodes. setState);
-        return;
       }, 10 * i);
     } else {
       setTimeout(() => {
         if (node.lastRow) {
-          document.getElementById(
-            `node-${node.row}-${node.col}`
-          ).className += `node-visited-last-row`;
+          document.getElementById(`node-${node.row}-${node.col}`).className +=
+            " node-visited-last-row";
         }
+
         if (node.lastCol) {
-          document.getElementById(
-            `node-${node.row}-${node.col}`
-          ).className += ` node=visited-last-col`;
+          document.getElementById(`node-${node.row}-${node.col}`).className +=
+            " node-visited-last-col";
         }
+
         document.getElementById(`node-${node.row}-${node.col}`).className +=
           " node-visited";
       }, 10 * i);
@@ -120,7 +98,6 @@ export const animateDjikstra = (
 };
 
 export const animateShortestPath = (shortestPathNodes, setState) => {
-  // const animateShortestPath = (shortestPathNodes) => {
   for (let i = 0; i < shortestPathNodes.length; i++) {
     setTimeout(() => {
       const node = shortestPathNodes[i];
@@ -129,21 +106,13 @@ export const animateShortestPath = (shortestPathNodes, setState) => {
     }, 50 * i);
     if (i === shortestPathNodes.length - 1) {
       setTimeout(() => {
-        setState((prev) => ({ ...prev, inProgress: "done" }));
-      }, 75 * 1);
+        setState((prev) => ({ ...prev, inProgress: "DONE" }));
+      }, 50 * i);
     }
   }
 };
 
-// export default async function visualizeDjikstra(
-//   grid,
-//   START_NODE_ROW,
-//   START_NODE_COL,
-//   FINISH_NODE_ROW,
-//   FINISH_NODE_COL,
-//   setState
-// ) {
-export default async function visualizeDjikstra(
+export default async function visualizeDijkstra(
   grid,
   startNode,
   finishNode,
@@ -154,6 +123,5 @@ export default async function visualizeDjikstra(
   const visitedNodesInOrder = djikstra(grid, startNodeObj, finishNodeObj);
   const shortestPathNodes = getShortestPathNodes(finishNodeObj);
 
-  // animateDjikstra(visitedNodesInOrder, shortestPathNodes, setState);
   animateDjikstra(visitedNodesInOrder, shortestPathNodes, setState);
 }

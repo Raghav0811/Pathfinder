@@ -4,6 +4,7 @@ import Legend from "./components/Legend";
 // import GridBar from "./components/GridBar";
 import Description from "./components/Description";
 import Grid from "./components/Grid";
+import Counter from "./components/Counter";
 
 import "./App.css";
 

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Node.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
 // import { faBullseye } from '@fortawesome/free-solid-svg-icons';
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import { faWeightHanging } from "@fortawesome/free-solid-svg-icons";
+
 const classNames = require("classnames");
 
 export default function Node(props) {
@@ -48,14 +50,13 @@ export default function Node(props) {
     "node-last-row": lastRow,
     "node-last-col": lastCol,
   });
-  const mountStartIcon = () => {
+  const mountIcon = () => {
     if (isStart) {
       return <FontAwesomeIcon icon={faLocationArrow} />;
-    }
-  };
-  const mountFinishIcon = () => {
-    if (isFinish) {
+    } else if (isFinish) {
       return <FontAwesomeIcon icon={faMapMarkerAlt} />;
+    } else if (isWeight) {
+      return <FontAwesomeIcon icon={faWeightHanging} />;
     }
   };
   return (
@@ -65,8 +66,7 @@ export default function Node(props) {
       onMouseEnter={handleMouseEnter}
       onMouseDown={handleMouseDown}
     >
-      {mountStartIcon()}
-      {mountFinishIcon()}
+      {mountIcon()}
     </div>
   );
 }

@@ -137,11 +137,13 @@
     transform: scale(1);
   }
 }
+
 @keyframes weightAnimation {
   0% {
     color: rgb(68, 68, 68);
     transform: scale(0.5);
   }
+
   100% {
     color: black;
     transform: scale(1);

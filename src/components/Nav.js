@@ -1,11 +1,9 @@
 import React from "react";
-
-// import "../Styles/NavBar.css";
-
+import "../Styles/NavBar.css";
 export default function Nav() {
   return (
-    <Nav className="NavBar">
-      <section className="logo">PathFinder</section>
-    </Nav>
+    <nav className="Nav">
+      <section className="logo">Pathfinder</section>
+    </nav>
   );
 }
