@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import visualizeDjikstra from "../helpers/djikstraHelpers";
-import visualizeBfs from "../helpers/breadthFirst";
+import visualizeBreadthFirst from "../helpers/breadthFirst";
+import visualizeDepthFirst from "../helpers/depthFirst";
 
 export default function useGridData() {
   const [startNode, setStartNode] = useState({ row: 7, col: 4 });
@@ -35,7 +36,7 @@ export default function useGridData() {
       distance: Infinity,
       isVisited: false,
       isWall: false,
-      isWeighted: false,
+      isWeight: false,
       previousNode: null,
       lastRow: row === 14,
       lastcol: col === 44,
@@ -84,13 +85,13 @@ export default function useGridData() {
     }
   };
 
-  const toggleWall = (row, col, isWall, isWeighted) => {
+  const toggleWall = (row, col, isWall, isWeight) => {
     //if the user clicks on an empty square, create a wall
     if (!state.inProgress && state.drawWall) {
       const newNode = {
         ...state.grid[row][col],
         isWall,
-        isWeighted: false,
+        isWeight: false,
       };
 
       const newRow = [...state.grid[row]];
@@ -103,7 +104,7 @@ export default function useGridData() {
     } else if (!state.inProgress && !state.drawWall) {
       const newNode = {
         ...state.grid[row][col],
-        isWeighted,
+        isWeight,
         isWall: false,
       };
 
@@ -147,7 +148,6 @@ export default function useGridData() {
         isStartPickup: false,
         isFinishPickup: false,
         drawWall: true,
-        makeWeight: false,
       });
 
       state.grid.forEach((row) => {
@@ -176,16 +176,15 @@ export default function useGridData() {
       return;
     } else {
       setState((prev) => ({ ...prev, inProgress: true }));
-      visualizeBfs(state.grid, startNode, finishNode, setState);
+      visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
       //   visualizeDjikstra(state.grid, startNode, finishNode, setState);
     }
   };
 
   const toggleWeight = () => {
-    if (!state.inProgress && state.drawWall) {
-      setState((prev) => ({ ...prev, makeWall: false, makeWeight: true }));
-    } else if (!state.inProgress && !state.drawWall) {
-      setState((prev) => ({ ...prev, makeWall: true, makeWeight: false }));
+    if (!state.inProgress) {
+      const drawWall = !state.drawWall;
+      setState((prev) => ({ ...prev, drawWall }));
     }
   };
 

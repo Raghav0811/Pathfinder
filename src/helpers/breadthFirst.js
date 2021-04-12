@@ -3,7 +3,7 @@ import {
   animateShortestPath,
 } from "../helpers/djikstraHelpers";
 
-export const getNeighborsBfs = (node, grid) => {
+export const getNeighborsBreadthFirst = (node, grid) => {
   const neighbors = [];
 
   const { row, col } = node;
@@ -26,9 +26,10 @@ export const getNeighborsBfs = (node, grid) => {
   return neighbors;
 };
 
-export const bfs = (grid, start, end) => {
+export const breadthFirst = (grid, start, end) => {
   let queue = [start];
   let visitedNodes = [start];
+
   while (queue.length > 0) {
     const currentNode = queue.shift();
     currentNode.isVisited = true;
@@ -37,7 +38,7 @@ export const bfs = (grid, start, end) => {
       return visitedNodes;
     }
 
-    const neighbors = getNeighborsBfs(currentNode, grid);
+    const neighbors = getNeighborsBreadthFirst(currentNode, grid);
     neighbors.forEach((neighbor) => {
       if (!neighbor.isVisited) {
         neighbor.previousNode = currentNode;
@@ -50,7 +51,7 @@ export const bfs = (grid, start, end) => {
   return visitedNodes;
 };
 
-export const animateBfs = (
+export const animateBreadthFirst = (
   visitedNodesInOrder,
   shortestPathNodes,
   setState
@@ -66,7 +67,7 @@ export const animateBfs = (
     } else {
       setTimeout(() => {
         // for each node in the array, add the 'visited' class
-        if (node.isWeighted) {
+        if (node.isWeight) {
           document.getElementById(`node-${node.row}-${node.col}`).className +=
             " node-weight-visited";
         } else {
@@ -78,11 +79,16 @@ export const animateBfs = (
   }
 };
 
-export default function visualizeBfs(grid, startNode, finishNode, setState) {
+export default function visualizeBreadthFirst(
+  grid,
+  startNode,
+  finishNode,
+  setState
+) {
   const startNodeObj = grid[startNode.row][startNode.col];
   const finishNodeObj = grid[finishNode.row][finishNode.col];
-  const visitedNodesInOrder = bfs(grid, startNodeObj, finishNodeObj);
+  const visitedNodesInOrder = breadthFirst(grid, startNodeObj, finishNodeObj);
   const shortestPathNodes = getShortestPathNodes(finishNodeObj);
 
-  animateBfs(visitedNodesInOrder, shortestPathNodes, setState);
+  animateBreadthFirst(visitedNodesInOrder, shortestPathNodes, setState);
 }

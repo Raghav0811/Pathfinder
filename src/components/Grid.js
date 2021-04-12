@@ -3,6 +3,9 @@ import Node from "../Pathfinder/Node/Node";
 import BasicButton from "./BasicButton";
 import Toggle from "./Toggle";
 import useGridData from "../hooks/useGridData";
+import "../Styles/Grid.css";
+import "../Styles/ToolBar.css";
+
 import {
   START_NODE_ROW,
   START_NODE_COL,
