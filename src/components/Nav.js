@@ -1,10 +1,23 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSortDown } from "@fortawesome/free-solid-svg-icons";
+import NavButton from "./NavButton";
+
 import "../Styles/NavBar.css";
+
 export default function Nav() {
   return (
     <nav className="Nav">
-      <section className="logo">Pathfinder</section>
-      <section className="viewcount">ViewCount</section>
+      <span className="logo">Pathfinder</span>
+      <ul className="nav-buttons">
+        <NavButton text="Tutorial" />
+        <li>
+          <a href="">
+            Select Algorithm{" "}
+            <FontAwesomeIcon icon={faSortDown} className="nav-icon" />
+          </a>
+        </li>
+      </ul>
     </nav>
   );
 }
