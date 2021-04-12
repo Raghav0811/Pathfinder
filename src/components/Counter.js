@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-export default function Counter(props) {
+export default function Counter() {
   const [counter, setCounter] = useState(0);
-  const { incrementCounter } = props;
-
   useEffect(() => {
-    Promise.resolve(axios.get("/counters/2")).then((response) => {
-      setCounter(response.data.visited);
-    });
-  }, [incrementCounter]);
+    const updateCounter = axios.put("/counters/2");
 
-  return <>{`${counter}`}</>;
+    const getCounter = axios.get("/counters/2");
+
+    axios.all([updateCounter, getCounter]).then(
+      axios.spread((...responses) => {
+        const { data } = responses[1];
+
+        setCounter(data.visited);
+      })
+    );
+  }, []);
+
+  return <>{` ${counter}`}</>;
 }
