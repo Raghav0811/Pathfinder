@@ -59,7 +59,6 @@ export const animateBreadthFirst = (
   for (let i = 0; i <= visitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
     const node = visitedNodesInOrder[i];
-
     if (i === visitedNodesInOrder.length) {
       setTimeout(() => {
         animateShortestPath(shortestPathNodes, setState);
@@ -67,13 +66,18 @@ export const animateBreadthFirst = (
     } else {
       setTimeout(() => {
         // for each node in the array, add the 'visited' class
-        if (node.isWeight) {
+        if (node.lastRow) {
           document.getElementById(`node-${node.row}-${node.col}`).className +=
-            " node-weight-visited";
-        } else {
-          document.getElementById(`node-${node.row}-${node.col}`).className +=
-            " node-visited";
+            " node-visited-last-row";
         }
+
+        if (node.lastCol) {
+          document.getElementById(`node-${node.row}-${node.col}`).className +=
+            " node-visited-last-col";
+        }
+
+        document.getElementById(`node-${node.row}-${node.col}`).className +=
+          " node-visited";
       }, 10 * i);
     }
   }
