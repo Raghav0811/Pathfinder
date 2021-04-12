@@ -1,22 +1,27 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSortDown } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "./NavButton";
+import DropDown from "./DropDown";
+import Counter from "./Counter";
 
 import "../Styles/NavBar.css";
 
-export default function Nav() {
+export default function Nav(props) {
+  const { toggleAlgorithm, incrementCounter } = props;
+
   return (
     <nav className="Nav">
-      <span className="logo">Pathfinder</span>
+      <section>
+        <span className="logo">Pathfinder</span>
+        <span className="spacer">&nbsp;</span>
+        <span className="viewcount">
+          <Counter incrementCounter={incrementCounter} /> algorithms visualized
+        </span>
+      </section>
       <ul className="nav-buttons">
         <NavButton text="Tutorial" />
-        <li>
-          <a href="">
-            Select Algorithm{" "}
-            <FontAwesomeIcon icon={faSortDown} className="nav-icon" />
-          </a>
-        </li>
+        <DropDown toggleAlgorithm={toggleAlgorithm} />
       </ul>
     </nav>
   );

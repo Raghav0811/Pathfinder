@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import Node from "../Pathfinder/Node/Node";
 import BasicButton from "./BasicButton";
 import Toggle from "./Toggle";
@@ -16,10 +17,19 @@ import {
 } from "../helpers/gridHelpers";
 // import visualizeDjikstra from "../helpers/djikstraHelpers";
 import "../Styles/Grid.css";
-export default function Grid() {
+
+export default function Grid(props) {
+  const { algorithm, toggleCounter } = props;
+
+  const manageVisualization = (algorithm) => {
+    Promise.resolve(axios.put("/counters/2")).then(() => {
+      toggleCounter();
+      startVisualization(algorithm);
+    });
+  };
+
   const {
     state,
-    setSate,
     mouseDown,
     mouseUp,
     togglePickup,
@@ -173,7 +183,7 @@ export default function Grid() {
             text="Visualize"
             size="large"
             color="primary"
-            onClick={startVisualization}
+            onClick={() => manageVisualization(algorithm)}
           />
           <BasicButton
             text="Reset Grid"

@@ -53,6 +53,7 @@ export default function useGridData() {
     isFinishPickup: false,
     drawWall: true,
     makeWeight: false,
+    algorithm: "DJIKSTRA",
   });
 
   const mouseDown = (row, col) => {
@@ -148,6 +149,7 @@ export default function useGridData() {
         isStartPickup: false,
         isFinishPickup: false,
         drawWall: true,
+        algorithm: "DJIKSTRA",
       });
 
       state.grid.forEach((row) => {
@@ -171,13 +173,22 @@ export default function useGridData() {
     }
   };
 
-  const startVisualization = () => {
-    if (state.inProgress || state.inProgress === "done") {
+  const startVisualization = (algorithm) => {
+    if (state.inProgress || state.inProgress === "DONE") {
       return;
     } else {
-      setState((prev) => ({ ...prev, inProgress: true }));
-      visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
-      //   visualizeDjikstra(state.grid, startNode, finishNode, setState);
+      switch (algorithm) {
+        case "DIJKSTRA":
+          visualizeDjikstra(state.grid, startNode, finishNode, setState);
+          break;
+        case "DEPTH-FIRST":
+          visualizeDepthFirst(state.grid, startNode, finishNode, setState);
+          break;
+        case "BREADTH-FIRST":
+          visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
+      }
+
+      return setState((prev) => ({ ...prev, inProgress: true }));
     }
   };
 
@@ -190,6 +201,7 @@ export default function useGridData() {
 
   return {
     state,
+    setState,
     mouseDown,
     mouseUp,
     togglePickup,

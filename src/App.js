@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Nav from "./components/Nav";
 import Legend from "./components/Legend";
 // import GridBar from "./components/GridBar";
@@ -9,11 +9,35 @@ import Counter from "./components/Counter";
 import "./App.css";
 
 function App() {
+  const [state, setState] = useState({
+    algorithm: "DJIKSTRA",
+    incrementCounter: false,
+  });
+
+  const toggleAlgorithm = (newAlgorithm) => {
+    const algorithm = newAlgorithm;
+
+    setState((prev) => ({ ...prev, algorithm }));
+  };
+
+  const toggleCounter = () => {
+    const incrementCounter = !state.incrementCounter;
+
+    setState((prev) => ({ ...prev, incrementCounter }));
+  };
+
   return (
     <div className="App">
-      {/* <Nav /> */}
+      <Nav
+        toggleAlgorithm={toggleAlgorithm}
+        incrementCounter={state.incrementCounter}
+      />
       <Description />
-      <Grid></Grid>
+      <Grid
+        algorithm={state.algorithm}
+        inProgress={state.inProgress}
+        toggleCounter={toggleCounter}
+      />
       <Legend />
     </div>
   );
