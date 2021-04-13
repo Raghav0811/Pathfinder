@@ -2,7 +2,7 @@ import {
   getUnvisitedNeighbors,
   getShortestPathNodes,
   animateDjikstra,
-} from "../helpers/dijkstraHelpers";
+} from "../helpers/djikstraHelpers";
 
 const manhattanDistance = (currentNode, endNode) => {
   //Used for heuristics

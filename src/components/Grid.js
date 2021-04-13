@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import Node from "../Pathfinder/Node/Node";
 import BasicButton from "./BasicButton";
@@ -19,14 +19,14 @@ import {
 import "../Styles/Grid.css";
 
 export default function Grid(props) {
-  const { algorithm, toggleCounter } = props;
+  const { algorithm, toggleCounter, toggleNavDisable } = props;
 
-  const manageVisualization = (algorithm) => {
-    Promise.resolve(axios.put("/counters/2")).then(() => {
-      toggleCounter();
-      startVisualization(algorithm);
-    });
-  };
+  // const manageVisualization = (algorithm) => {
+  //   Promise.resolve(axios.put("/counters/2")).then(() => {
+  //     toggleCounter();
+  //     startVisualization(algorithm);
+  //   });
+  // };
 
   const {
     state,
@@ -38,7 +38,27 @@ export default function Grid(props) {
     resetGrid,
     startVisualization,
     toggleWeight,
+    clearWeights,
   } = useGridData();
+
+  useEffect(() => {
+    if (algorithm !== "DJIKSTRA") {
+      clearWeights();
+    }
+  }, [algorithm]);
+
+  useEffect(() => {
+    state.inProgress ? toggleNavDisable(true) : toggleNavDisable(false);
+  }, [state.inProgress]);
+
+  const manageVisualization = (algorithm) => {
+    Promise.resolve(axios.put("/counters/2")).then(() => {
+      toggleCounter();
+      toggleNavDisable();
+      startVisualization(algorithm);
+    });
+  };
+
   // export default function Grid() {
   //   const [state, setState] = useState({
   //     grid: iniGrid(),
@@ -191,6 +211,7 @@ export default function Grid(props) {
             size="small"
             color="secondary"
             onClick={resetGrid}
+            inProgress={state.inProgress}
           />
         </section>
         <section className="Toggle">
@@ -198,6 +219,7 @@ export default function Grid(props) {
             drawWall={state.drawWall}
             toggleWeight={toggleWeight}
             inProgress={state.inProgress}
+            algorithm={algorithm}
           />
         </section>
       </div>

@@ -140,60 +140,51 @@ export default function useGridData() {
   }, [startNode, finishNode]);
 
   const resetGrid = () => {
-    if (state.inProgress === true) {
-      return;
-    } else {
-      setStartNode({ row: 7, col: 4 });
-      setFinishNode({ row: 7, col: 40 });
+    setStartNode({ row: 7, col: 4 });
+    setFinishNode({ row: 7, col: 40 });
 
-      setState({
-        grid: iniGrid(),
-        mousePressed: false,
-        inProgress: false,
-        isStartPickup: false,
-        isFinishPickup: false,
-        drawWall: true,
-        algorithm: "DJIKSTRA",
+    setState((prev) => ({
+      ...prev,
+      grid: iniGrid(),
+      mousePressed: false,
+      inProgress: false,
+      isStartPickup: false,
+      isFinishPickup: false,
+      drawWall: true,
+    }));
+
+    state.grid.forEach((row) => {
+      row.forEach((node) => {
+        document.getElementById(`node-${node.row}-${node.col}`).className =
+          "Node";
+
+        if (node.lastRow) {
+          document.getElementById(`node-${node.row}-${node.col}`).className +=
+            " node-last-row";
+        }
+
+        if (node.lastCol) {
+          document.getElementById(`node-${node.row}-${node.col}`).className +=
+            " node-last-col";
+        }
       });
-
-      state.grid.forEach((row) => {
-        row.forEach((node) => {
-          document.getElementById(`node-${node.row}-${node.col}`).className =
-            "Node";
-
-          if (node.lastRow) {
-            document.getElementById(
-              `node-${node.row}-${node.col}`
-            ).className += ` node-last-row`;
-          }
-
-          if (node.lastCol) {
-            document.getElementById(
-              `node-${node.row}-${node.col}`
-            ).className += ` node-last-col`;
-          }
-        });
-      });
-    }
+    });
   };
 
   const startVisualization = (algorithm) => {
-    if (state.inProgress || state.inProgress === "DONE") {
-      return;
-    } else {
-      switch (algorithm) {
-        case "DIJKSTRA":
-          visualizeAstar(state.grid, startNode, finishNode, setState);
-          //visualizeDijkstra(state.grid, startNode, finishNode, setState);
-          break;
-        case "DEPTH-FIRST":
-          visualizeDepthFirst(state.grid, startNode, finishNode, setState);
-          break;
-        case "BREADTH-FIRST":
-          visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
-      }
-      return setState((prev) => ({ ...prev, inProgress: true }));
+    switch (algorithm) {
+      case "DJIKSTRA":
+        visualizeDjikstra(state.grid, startNode, finishNode, setState);
+        break;
+      case "DEPTH-FIRST":
+        visualizeDepthFirst(state.grid, startNode, finishNode, setState);
+        break;
+      case "BREADTH-FIRST":
+        visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
+        break;
     }
+
+    return setState((prev) => ({ ...prev, inProgress: true }));
   };
 
   const toggleWeight = () => {
@@ -201,6 +192,22 @@ export default function useGridData() {
       const drawWall = !state.drawWall;
       setState((prev) => ({ ...prev, drawWall }));
     }
+  };
+
+  const clearWeights = () => {
+    const oldGrid = [...state.grid];
+
+    const grid = oldGrid.map((row) => {
+      return row.map((node) => {
+        const newNode = {
+          ...node,
+          isWeight: false,
+        };
+        return newNode;
+      });
+    });
+
+    setState((prev) => ({ ...prev, grid, drawWall: true }));
   };
 
   return {
@@ -214,5 +221,6 @@ export default function useGridData() {
     resetGrid,
     startVisualization,
     toggleWeight,
+    clearWeights,
   };
 }
