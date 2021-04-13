@@ -13,15 +13,20 @@ export default function Nav(props) {
   return (
     <nav className="Nav">
       <section>
-        <span className="logo">Pathfinder</span>
+        <a href="/" className="logo">
+          Pathfinder
+        </a>
         <span className="spacer">&nbsp;</span>
         <span className="viewcount">
-          <Counter incrementCounter={incrementCounter} /> algorithms visualized
+          <Counter incrementCounter={incrementCounter} /> paths visualized
         </span>
       </section>
       <ul className="nav-buttons">
         <button>Tutorial</button>
-        <DropDown toggleAlgorithm={toggleAlgorithm} />
+        <span className="spacer">&nbsp;</span>
+        <li>
+          <DropDown toggleAlgorithm={toggleAlgorithm} />
+        </li>
       </ul>
     </nav>
   );

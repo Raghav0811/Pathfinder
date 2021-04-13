@@ -180,10 +180,11 @@ export default function Grid(props) {
       <div className="ToolBar">
         <section className="Buttons">
           <BasicButton
-            text="Visualize"
+            text="&nbsp;Visualize&nbsp;"
             size="large"
             color="primary"
             onClick={() => manageVisualization(algorithm)}
+            inProgress={state.inProgress}
           />
           <BasicButton
             text="Reset Grid"
@@ -193,7 +194,11 @@ export default function Grid(props) {
           />
         </section>
         <section className="Toggle">
-          <Toggle drawWall={state.drawWall} toggleWeight={toggleWeight} />
+          <Toggle
+            drawWall={state.drawWall}
+            toggleWeight={toggleWeight}
+            inProgress={state.inProgress}
+          />
         </section>
       </div>
       <div className="Grid" onMouseDown={mouseDown} onMouseUp={mouseUp}>
