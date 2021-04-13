@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWaveSquare } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "../Styles/Description.css";
 
 export default function Description(props) {
   const [desc, setDesc] = useState({
-    algName: "Dijkstra's Algorithm",
+    algName: "Djikstra's",
     algDesc:
-      "Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph, which may represent, for example, road networks. It picks the unvisited node with the lowest distance, calculates the distance through it to each unvisited neighbor, and updates the neighbor's distance if smaller.",
+      "Djikstra’s algorithm finds the shortest path between two nodes on a graph. It has several real-world applications, including its implementation in Google Maps and Apple Maps.\nBeginning at the start node, the algorithm picks the unvisited node with the lowest distance (its neighbors), calculates the distance through that node to each of its unvisited neighbors, and so on, until the end node is reached.\nUnlike the bread-first search algorithm, Djikstra’s algorithm can account for weighted nodes that require more ‘work’ to pass through (picture traffic spots on a map).",
   });
   const { algorithm } = props;
 
@@ -37,7 +39,10 @@ export default function Description(props) {
 
   return (
     <div className="Description">
-      <h2>{`${desc.algName}`}</h2>
+      <h2>
+        <FontAwesomeIcon icon={faWaveSquare} />
+        &nbsp;&nbsp; {desc.algName} Algorithm
+      </h2>
       <p>{desc.algDesc}</p>
     </div>
   );
