@@ -1,7 +1,7 @@
 import React from "react";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faSortDown } from "@fortawesome/free-solid-svg-icons";
-import NavButton from "./NavButton";
+// import NavButton from "./NavButton";
 import DropDown from "./DropDown";
 import Counter from "./Counter";
 
@@ -20,7 +20,7 @@ export default function Nav(props) {
         </span>
       </section>
       <ul className="nav-buttons">
-        <NavButton text="Tutorial" />
+        <button>Tutorial</button>
         <DropDown toggleAlgorithm={toggleAlgorithm} />
       </ul>
     </nav>

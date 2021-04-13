@@ -32,7 +32,7 @@ function App() {
         toggleAlgorithm={toggleAlgorithm}
         incrementCounter={state.incrementCounter}
       />
-      <Description />
+      <Description algorithm={state.algorithm} />
       <Grid
         algorithm={state.algorithm}
         inProgress={state.inProgress}
