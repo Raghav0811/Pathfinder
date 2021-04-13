@@ -1,5 +1,5 @@
 // get the unvisited neighboring nodes for the node being analyzed
-const getUnvisitedNeighbors = (node, grid) => {
+export const getUnvisitedNeighbors = (node, grid) => {
   const neighbors = [];
   const { row, col } = node;
   if (row > 0) neighbors.push(grid[row - 1][col]); // add the node above
@@ -69,7 +69,11 @@ export const getShortestPathNodes = (finishNode) => {
   return path;
 };
 
-const animateDjikstra = (visitedNodesInOrder, shortestPathNodes, setState) => {
+export const animateDjikstra = (
+  visitedNodesInOrder,
+  shortestPathNodes,
+  setState
+) => {
   for (let i = 0; i <= visitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
     const node = visitedNodesInOrder[i];
