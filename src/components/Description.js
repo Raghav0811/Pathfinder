@@ -11,7 +11,7 @@ export default function Description(props) {
   const { algorithm } = props;
 
   useEffect(() => {
-    if (algorithm === "DIJKSTRA") {
+    if (algorithm === "DJIKSTRA") {
       Promise.resolve(axios.get("/descriptions/1")).then((response) => {
         setDesc({
           algName: response.data.algorithm_name,

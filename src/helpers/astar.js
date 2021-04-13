@@ -4,6 +4,8 @@ import {
   animateDjikstra,
 } from "../helpers/djikstraHelpers";
 
+import { getNeighborsBreadthFirst } from "./breadthFirst";
+
 const manhattanDistance = (currentNode, endNode) => {
   //Used for heuristics
   const differenceInCol = Math.abs(currentNode.col - endNode.col);
@@ -24,10 +26,11 @@ export const astar = (grid, start, end) => {
     visitedNodes.push(currentNode);
     currentNode.isVisited = true;
 
-    if (currentNode.col === end.col && currentNode.row === end.row)
+    if (currentNode.col === end.col && currentNode.row === end.row) {
       return visitedNodes;
+    }
 
-    const neighbors = getUnvisitedNeighbors(currentNode, grid);
+    const neighbors = getNeighborsBreadthFirst(currentNode, grid);
 
     neighbors.forEach((neighbor) => {
       currentNode.distance = 0;
@@ -39,15 +42,16 @@ export const astar = (grid, start, end) => {
         }
         neighbor.heuristic = manhattanDistance(neighbor, end);
         neighbor.cost = neighbor.distance + neighbor.heuristic;
+        neighbor.previousNode = currentNode;
 
         if (!unVisitedNodes.length) {
           unVisitedNodes.push(neighbor);
         } else {
-          unVisitedNodes.forEach((unVisitedNode) => {
+          unVisitedNodes.forEach((unVisitedNode, idx) => {
             if (
               unVisitedNode.col === neighbor.col &&
               unVisitedNode.row === neighbor.row &&
-              unVisitedNode.cost < neighbor.cost
+              unVisitedNode.cost <= neighbor.cost
             ) {
               return;
             }

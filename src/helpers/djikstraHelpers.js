@@ -60,7 +60,7 @@ export const getShortestPathNodes = (finishNode) => {
   const path = [];
 
   let currentNode = finishNode;
-  path.unshift(currentNode);
+  // path.unshift(currentNode);
   while (currentNode) {
     path.unshift(currentNode);
     currentNode = currentNode.previousNode; // once we reach the start node, this becomes null and the loop breaks

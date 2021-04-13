@@ -31,7 +31,7 @@ export default function Nav(props) {
       <ul className="nav-buttons">
         <li>
           <Button style={style} disabled={disableNav}>
-            &nbsp;Tutorial&nbsp
+            &nbsp;Tutorial&nbsp;
           </Button>
         </li>
         <span className="spacer">&nbsp;</span>
