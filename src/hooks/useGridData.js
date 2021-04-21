@@ -172,19 +172,26 @@ export default function useGridData() {
   };
 
   const startVisualization = (algorithm) => {
-    switch (algorithm) {
-      case "DJIKSTRA":
-        visualizeDjikstra(state.grid, startNode, finishNode, setState);
-        break;
-      case "DEPTH-FIRST":
-        visualizeDepthFirst(state.grid, startNode, finishNode, setState);
-        break;
-      case "BREADTH-FIRST":
-        visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
-        break;
-    }
+    if (state.inProgress || state.inProgress === "DONE") {
+      return;
+    } else {
+      switch (algorithm) {
+        case "DIJKSTRA":
+          visualizeDjikstra(state.grid, startNode, finishNode, setState);
+          break;
+        case "DEPTH-FIRST":
+          visualizeDepthFirst(state.grid, startNode, finishNode, setState);
+          break;
+        case "BREADTH-FIRST":
+          visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
+          break;
+        case "A-STAR":
+          visualizeAstar(state.grid, startNode, finishNode, setState);
+          break;
+      }
 
-    return setState((prev) => ({ ...prev, inProgress: true }));
+      return setState((prev) => ({ ...prev, inProgress: true }));
+    }
   };
 
   const toggleWeight = () => {
