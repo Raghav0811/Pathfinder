@@ -26,7 +26,7 @@ export const astar = (grid, start, end) => {
     currentNode.isVisited = true;
 
     if (currentNode.col === end.col && currentNode.row === end.row) {
-      break;
+      return visitedNodes;
     }
 
     const neighbors = getNeighborsBreadthFirst(currentNode, grid);

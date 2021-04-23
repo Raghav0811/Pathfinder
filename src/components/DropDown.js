@@ -126,6 +126,12 @@ export default function Dropdown(props) {
                   >
                     Breadth First
                   </MenuItem>
+                  <MenuItem
+                    className={classes.select}
+                    onClick={() => handleAlgToggle("A-STAR")}
+                  >
+                    A*
+                  </MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>
