@@ -35,12 +35,12 @@ export const astar = (grid, start, end) => {
     neighbors.forEach((neighbor) => {
       if (!neighbor.isVisited && !neighbor.isWall) {
         if (neighbor.isWeight) {
-          neighbor.distance = currentNode.distance + 3;
+          neighbor.distanceToStart = currentNode.distanceToStart + 3;
         } else {
-          neighbor.distance = currentNode.distance + 1;
+          neighbor.distanceToStart = currentNode.distanceToStart + 1;
         }
         neighbor.heuristic = manhattanDistance(neighbor, end);
-        neighbor.cost = neighbor.distance + neighbor.heuristic;
+        neighbor.cost = neighbor.distanceToStart + neighbor.heuristic;
         neighbor.previousNode = currentNode;
 
         if (!unVisitedNodes.length) {
