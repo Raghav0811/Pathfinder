@@ -2,7 +2,10 @@
   "name": "djikstra",
   "version": "0.1.0",
   "private": true,
-  
+  "engines": {
+    "node": "10.6.3",
+    "npm": "6.14.8"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
@@ -15,6 +18,7 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
+    "express": "^4.17.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-fontawesome": "^1.7.1",
@@ -22,7 +26,8 @@
     "web-vitals": "^1.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server.js",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
