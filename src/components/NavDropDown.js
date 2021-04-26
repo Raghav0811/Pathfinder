@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dropdown(props) {
+export default function NavDropDown(props) {
   const { toggleAlgorithm, disableNav } = props;
 
   const classes = useStyles();
@@ -43,19 +43,16 @@ export default function Dropdown(props) {
     setOpen(false);
   };
 
-  function handleListKeyDown(event) {
+  const handleListKeyDown = (event) => {
     if (event.key === "Tab") {
       event.preventDefault();
       setOpen(false);
     }
-  }
-
+  };
   const handleAlgToggle = (algorithm) => {
     setOpen(false);
-
     toggleAlgorithm(algorithm);
   };
-
   const manageIconMount = () => {
     return open ? (
       <FontAwesomeIcon icon={faCaretUp} />
@@ -63,17 +60,13 @@ export default function Dropdown(props) {
       <FontAwesomeIcon icon={faCaretDown} />
     );
   };
-
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
-
     prevOpen.current = open;
   }, [open]);
-
   const prevOpen = useRef(open);
-
   return (
     <div className={classes.root}>
       <Button
@@ -84,7 +77,7 @@ export default function Dropdown(props) {
         className={classes.root}
         disabled={disableNav}
       >
-        &nbsp;Select Algorithm&nbsp;&nbsp;{manageIconMount()}&nbsp;
+        &nbsp;Select Algorithm&nbsp;&nbsp;{manageIconMount()}
       </Button>
       <Popper
         open={open}
@@ -110,7 +103,7 @@ export default function Dropdown(props) {
                 >
                   <MenuItem
                     className={classes.select}
-                    onClick={() => handleAlgToggle("DJIKSTRA")}
+                    onClick={() => handleAlgToggle("DIJKSTRA")}
                   >
                     Dijkstra
                   </MenuItem>
@@ -118,19 +111,13 @@ export default function Dropdown(props) {
                     className={classes.select}
                     onClick={() => handleAlgToggle("DEPTH-FIRST")}
                   >
-                    Depth First
+                    Depth-First
                   </MenuItem>
                   <MenuItem
                     className={classes.select}
                     onClick={() => handleAlgToggle("BREADTH-FIRST")}
                   >
-                    Breadth First
-                  </MenuItem>
-                  <MenuItem
-                    className={classes.select}
-                    onClick={() => handleAlgToggle("A-STAR")}
-                  >
-                    A*
+                    Breadth-First
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

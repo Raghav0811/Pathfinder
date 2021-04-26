@@ -2,7 +2,7 @@ import React from "react";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 // import NavButton from "./NavButton";
-import DropDown from "./DropDown";
+import NavDropDown from "./NavDropDown";
 import Counter from "./Counter";
 
 import Button from "@material-ui/core/Button";
@@ -34,7 +34,10 @@ export default function Nav(props) {
         </li>
         <span className="spacer">&nbsp;</span>
         <li>
-          <DropDown toggleAlgorithm={toggleAlgorithm} disableNav={disableNav} />
+          <NavDropDown
+            toggleAlgorithm={toggleAlgorithm}
+            disableNav={disableNav}
+          />
         </li>
       </ul>
     </nav>

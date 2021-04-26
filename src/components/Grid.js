@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import Node from "../Pathfinder/Node/Node";
 import BasicButton from "./BasicButton";
+import ToolBarDropDown from "./ToolBarDropDown";
 import Toggle from "./Toggle";
 import useGridData from "../hooks/useGridData";
 import "../Styles/Grid.css";
@@ -209,11 +210,30 @@ export default function Grid(props) {
           <BasicButton
             text="Reset Grid"
             size="small"
-            color="secondary"
+            color="primary"
             onClick={resetGrid}
             inProgress={state.inProgress}
           />
         </section>
+        <span className="toolbar-left-spacer">&nbsp;</span>
+        <section className="Tools">
+          <BasicButton
+            text="Add Node"
+            size="small"
+            color="secondary"
+            onClick={() => console.log("test")}
+            inProgress={state.inProgress}
+          />
+          <BasicButton
+            text="Generate Maze"
+            size="small"
+            color="secondary"
+            onClick={() => console.log("test")}
+            inProgress={state.inProgress}
+          />
+          <ToolBarDropDown inProgress={state.inProgress} />
+        </section>
+        <span className="toolbar-right-spacer">&nbsp;</span>
         <section className="Toggle">
           <Toggle
             drawWall={state.drawWall}
