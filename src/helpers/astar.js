@@ -16,31 +16,26 @@ const manhattanDistance = (currentNode, endNode) => {
 export const astar = (grid, start, end) => {
   let unVisitedNodes = [start];
   let visitedNodes = [];
-
   while (unVisitedNodes.length) {
     unVisitedNodes.sort((nodeA, nodeB) => nodeA.cost - nodeB.cost);
-
     const currentNode = unVisitedNodes.shift();
-
     visitedNodes.push(currentNode);
     currentNode.isVisited = true;
-
     if (currentNode.col === end.col && currentNode.row === end.row) {
       return visitedNodes;
     }
 
     const neighbors = getNeighborsBreadthFirst(currentNode, grid);
-    currentNode.distance = 0;
-
     neighbors.forEach((neighbor) => {
+      neighbor.heuristic = manhattanDistance(neighbor, end);
+
       if (!neighbor.isVisited && !neighbor.isWall) {
         if (neighbor.isWeight) {
-          neighbor.distanceToStart = currentNode.distanceToStart + 3;
+          neighbor.cost = currentNode.distanceToStart + neighbor.heuristic + 2;
         } else {
-          neighbor.distanceToStart = currentNode.distanceToStart + 1;
+          neighbor.cost = currentNode.distanceToStart + neighbor.heuristic - 1;
         }
-        neighbor.heuristic = manhattanDistance(neighbor, end);
-        neighbor.cost = neighbor.distanceToStart + neighbor.heuristic;
+
         neighbor.previousNode = currentNode;
 
         if (!unVisitedNodes.length) {
@@ -49,12 +44,14 @@ export const astar = (grid, start, end) => {
           let hasMatch = false;
           for (let i = 0; i < unVisitedNodes.length; i++) {
             const unVisitedNode = unVisitedNodes[i];
+
             if (
               unVisitedNode.col === neighbor.col &&
               unVisitedNode.row === neighbor.row &&
               unVisitedNode.cost > neighbor.cost
             ) {
               unVisitedNode = neighbor;
+              console.log("made it here");
               hasMatch = true;
             } else if (
               unVisitedNode.col === neighbor.col &&
@@ -64,6 +61,7 @@ export const astar = (grid, start, end) => {
               hasMatch = true;
             }
           }
+
           if (!hasMatch) {
             unVisitedNodes.push(neighbor);
           }
@@ -73,7 +71,6 @@ export const astar = (grid, start, end) => {
   }
   return visitedNodes;
 };
-
 export default async function visualizeAstar(
   grid,
   startNode,
