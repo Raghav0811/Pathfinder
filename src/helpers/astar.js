@@ -1,86 +1,57 @@
 import {
-  getUnvisitedNeighbors,
-  getShortestPathNodes,
-  animateDjikstra,
-} from "../helpers/djikstraHelpers";
+  getNeighborsQueue,
+  heuristic,
+  sortNodesByCost,
+  checkOpenList,
+} from "./algorithmHelpers";
 
-import { getNeighborsBreadthFirst } from "./breadthFirst";
+export default function astar(grid, start, end) {
+  start.distanceToStart = 0;
+  start.cost = heuristic(start, end);
 
-const manhattanDistance = (currentNode, endNode) => {
-  //Used for heuristics
-  const differenceInCol = Math.abs(currentNode.col - endNode.col);
-  const differenceInRow = Math.abs(currentNode.row - endNode.row);
-  return differenceInCol + differenceInRow;
-};
-
-export const astar = (grid, start, end) => {
   let unVisitedNodes = [start];
   let visitedNodes = [];
+
   while (unVisitedNodes.length) {
-    unVisitedNodes.sort((nodeA, nodeB) => nodeA.cost - nodeB.cost);
+    unVisitedNodes = sortNodesByCost(unVisitedNodes);
+
     const currentNode = unVisitedNodes.shift();
-    visitedNodes.push(currentNode);
-    currentNode.isVisited = true;
+
     if (currentNode.col === end.col && currentNode.row === end.row) {
+      visitedNodes.push(currentNode);
       return visitedNodes;
     }
 
-    const neighbors = getNeighborsBreadthFirst(currentNode, grid);
+    const neighbors = getNeighborsQueue(currentNode, grid);
+
     neighbors.forEach((neighbor) => {
-      neighbor.heuristic = manhattanDistance(neighbor, end);
+      const heuristicToEnd = heuristic(neighbor, end);
 
       if (!neighbor.isVisited && !neighbor.isWall) {
+        neighbor.distanceToStart = currentNode.distanceToStart + 1;
+        neighbor.heuristic = heuristicToEnd;
+
         if (neighbor.isWeight) {
-          neighbor.cost = currentNode.distanceToStart + neighbor.heuristic + 2;
-        } else {
-          neighbor.cost = currentNode.distanceToStart + neighbor.heuristic - 1;
+          neighbor.heuristic += 2;
         }
 
-        neighbor.previousNode = currentNode;
+        if (currentNode.isWeight && neighbor.isWeight) {
+          neighbor.heuristic *= 1.5;
+        }
 
-        if (!unVisitedNodes.length) {
+        neighbor.cost = neighbor.distanceToStart + neighbor.heuristic;
+
+        if (checkOpenList(unVisitedNodes, neighbor)) {
           unVisitedNodes.push(neighbor);
-        } else {
-          let hasMatch = false;
-          for (let i = 0; i < unVisitedNodes.length; i++) {
-            const unVisitedNode = unVisitedNodes[i];
-
-            if (
-              unVisitedNode.col === neighbor.col &&
-              unVisitedNode.row === neighbor.row &&
-              unVisitedNode.cost > neighbor.cost
-            ) {
-              unVisitedNode = neighbor;
-              console.log("made it here");
-              hasMatch = true;
-            } else if (
-              unVisitedNode.col === neighbor.col &&
-              unVisitedNode.row === neighbor.row &&
-              unVisitedNode.cost <= neighbor.cost
-            ) {
-              hasMatch = true;
-            }
-          }
-
-          if (!hasMatch) {
-            unVisitedNodes.push(neighbor);
-          }
+          neighbor.previousNode = currentNode;
         }
       }
     });
-  }
-  return visitedNodes;
-};
-export default async function visualizeAstar(
-  grid,
-  startNode,
-  finishNode,
-  setState
-) {
-  const startNodeObj = grid[startNode.row][startNode.col];
-  const finishNodeObj = grid[finishNode.row][finishNode.col];
-  const visitedNodesInOrder = astar(grid, startNodeObj, finishNodeObj);
-  const shortestPathNodes = getShortestPathNodes(finishNodeObj);
 
-  animateDjikstra(visitedNodesInOrder, shortestPathNodes, setState);
+    currentNode.isVisited = true;
+
+    visitedNodes.push(currentNode);
+  }
+
+  return visitedNodes;
 }

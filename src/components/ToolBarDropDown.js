@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
@@ -27,20 +28,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavDropdown(props) {
-  const { inProgress } = props;
+export default function ToolBarDropDown(props) {
+  const { inProgress, loadWalls } = props;
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
+  const [maps, setMaps] = useState({
+    face: [],
+  });
+
+  useEffect(() => {
+    Promise.all([
+      axios.get("/saved_grids/face").then((response) => {
+        return response.data[0].rows;
+      }),
+      axios.get("/saved_grids/invaders").then((response) => {
+        return response.data[0].rows;
+      }),
+      axios.get("/saved_grids/pokemon").then((response) => {
+        return response.data[0].rows;
+      }),
+    ]).then((all) => {
+      setMaps(() => ({
+        face: all[0],
+        invaders: all[1],
+        pokemon: all[2],
+      }));
+    });
+  }, []);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
+
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
+
     setOpen(false);
   };
 
@@ -51,15 +77,17 @@ export default function NavDropdown(props) {
     }
   };
 
-  const handleAlgToggle = (algorithm) => {
+  const handleWallLoad = (walls) => {
     setOpen(false);
+
+    loadWalls(walls, "MAP");
   };
 
-  const manageIconMount = (algorithm) => {
+  const manageIconMount = () => {
     return open ? (
       <FontAwesomeIcon icon={faCaretUp} />
     ) : (
-      <FontAwesomeIcon icon={faCaretUp} />
+      <FontAwesomeIcon icon={faCaretDown} />
     );
   };
 
@@ -81,6 +109,7 @@ export default function NavDropdown(props) {
           aria-controls={open ? "menu-list-grow" : undefined}
           aria-haspopup="true"
           onClick={handleToggle}
+          className={classes.root}
           size="small"
           color="secondary"
           variant="contained"
@@ -113,21 +142,21 @@ export default function NavDropdown(props) {
                   >
                     <MenuItem
                       className={classes.select}
-                      onClick={() => handleAlgToggle("DIJKSTRA")}
+                      onClick={() => handleWallLoad(maps.face)}
                     >
-                      Dijkstra
+                      Happy Face
                     </MenuItem>
                     <MenuItem
                       className={classes.select}
-                      onClick={() => handleAlgToggle("DEPTH-FIRST")}
+                      onClick={() => handleWallLoad(maps.invaders)}
                     >
-                      Depth-First
+                      Invaders
                     </MenuItem>
                     <MenuItem
                       className={classes.select}
-                      onClick={() => handleAlgToggle("BREADTH-FIRST")}
+                      onClick={() => handleWallLoad(maps.pokemon)}
                     >
-                      Breadth-First
+                      Sprites
                     </MenuItem>
                   </MenuList>
                 </ClickAwayListener>

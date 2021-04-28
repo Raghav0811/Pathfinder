@@ -1,8 +1,32 @@
-let graph = {
-  start: { A: 5, B: 2 },
-  A: { start: 1, C: 4, D: 2 },
-  B: { A: 8, D: 7 },
-  C: { D: 6, finish: 3 },
-  D: { finish: 1 },
-  finish: {},
-};
+import {
+  updateUnvisitedNeighbors,
+  sortNodesByDistance,
+  removeNestedNodes,
+} from "./algorithmHelpers";
+
+export default function dijkstra(grid, startNode, finishNode) {
+  const visitedNodesInOrder = [];
+  startNode.distance = 0;
+  const unvisitedNodes = removeNestedNodes(grid);
+
+  while (unvisitedNodes.length > 0) {
+    sortNodesByDistance(unvisitedNodes);
+    const closestNode = unvisitedNodes.shift();
+
+    if (closestNode.isWall) continue;
+
+    if (closestNode.distance === Infinity) return visitedNodesInOrder;
+    // if the start node is completely surrounded by walls, we can't find any more neighbors (where distance isn't infinity) and are therefore stuck
+
+    closestNode.isVisited = true;
+    visitedNodesInOrder.push(closestNode);
+
+    if (
+      closestNode.row === finishNode.row &&
+      closestNode.col === finishNode.col
+    )
+      return visitedNodesInOrder; // algorithm complete, finished node has been found
+
+    updateUnvisitedNeighbors(closestNode, grid);
+  }
+}

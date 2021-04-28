@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 // import GridBar from "./components/GridBar";
 import Description from "./components/Description";
 import Grid from "./components/Grid";
-import Counter from "./components/Counter";
+// import Counter from "./components/Counter";
 
 import "./App.css";
 

@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavDropDown(props) {
+export default function NavDropdown(props) {
   const { toggleAlgorithm, disableNav } = props;
 
   const classes = useStyles();
@@ -49,10 +49,13 @@ export default function NavDropDown(props) {
       setOpen(false);
     }
   };
+
   const handleAlgToggle = (algorithm) => {
     setOpen(false);
+
     toggleAlgorithm(algorithm);
   };
+
   const manageIconMount = () => {
     return open ? (
       <FontAwesomeIcon icon={faCaretUp} />
@@ -60,13 +63,17 @@ export default function NavDropDown(props) {
       <FontAwesomeIcon icon={faCaretDown} />
     );
   };
+
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
+
     prevOpen.current = open;
   }, [open]);
+
   const prevOpen = useRef(open);
+
   return (
     <div className={classes.root}>
       <Button
@@ -109,15 +116,27 @@ export default function NavDropDown(props) {
                   </MenuItem>
                   <MenuItem
                     className={classes.select}
-                    onClick={() => handleAlgToggle("DEPTH-FIRST")}
+                    onClick={() => handleAlgToggle("A-STAR")}
                   >
-                    Depth-First
+                    A*
+                  </MenuItem>
+                  <MenuItem
+                    className={classes.select}
+                    onClick={() => handleAlgToggle("GREEDY")}
+                  >
+                    Greedy Best-First
                   </MenuItem>
                   <MenuItem
                     className={classes.select}
                     onClick={() => handleAlgToggle("BREADTH-FIRST")}
                   >
                     Breadth-First
+                  </MenuItem>
+                  <MenuItem
+                    className={classes.select}
+                    onClick={() => handleAlgToggle("DEPTH-FIRST")}
+                  >
+                    Depth-First
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
