@@ -3,11 +3,10 @@ import visualizeDjikstra from "../helpers/djikstraHelpers";
 import visualizeBreadthFirst from "../helpers/breadthFirst";
 import visualizeDepthFirst from "../helpers/depthFirst";
 import visualizeAstar from "../helpers/astar";
-
 export default function useGridData() {
   const [startNode, setStartNode] = useState({ row: 7, col: 4 });
   const [finishNode, setFinishNode] = useState({ row: 7, col: 40 });
-  const iniGrid = () => {
+  const setInitialGrid = () => {
     // create the initial array of node objects
     const grid = [];
 
@@ -40,7 +39,7 @@ export default function useGridData() {
       isWeight: false,
       previousNode: null,
       lastRow: row === 14,
-      lastcol: col === 44,
+      lastCol: col === 44,
       distanceToStart: 0,
       heuristic: 0,
       cost: Infinity,
@@ -50,16 +49,14 @@ export default function useGridData() {
   };
 
   const [state, setState] = useState({
-    grid: iniGrid(),
+    grid: setInitialGrid(),
     mousePressed: false,
     inProgress: false,
     isStartPickup: false,
     isFinishPickup: false,
     drawWall: true,
-    makeWeight: false,
-    algorithm: "DJIKSTRA",
+    algorithm: "DIJKSTRA",
   });
-
   const mouseDown = (row, col) => {
     setState((prev) => ({ ...prev, mousePressed: true }));
   };
@@ -89,7 +86,6 @@ export default function useGridData() {
       setFinishNode(newNode);
     }
   };
-
   const toggleWall = (row, col, isWall, isWeight) => {
     //if the user clicks on an empty square, create a wall
     if (!state.inProgress && state.drawWall) {
@@ -98,13 +94,10 @@ export default function useGridData() {
         isWall,
         isWeight: false,
       };
-
       const newRow = [...state.grid[row]];
       newRow[col] = newNode;
-
       const grid = [...state.grid];
       grid[row] = newRow;
-
       setState((prev) => ({ ...prev, grid }));
     } else if (!state.inProgress && !state.drawWall) {
       const newNode = {
@@ -112,7 +105,6 @@ export default function useGridData() {
         isWeight,
         isWall: false,
       };
-
       const newRow = [...state.grid[row]];
       newRow[col] = newNode;
       const grid = [...state.grid];
@@ -120,7 +112,6 @@ export default function useGridData() {
       setState((prev) => ({ ...prev, grid }));
     }
   };
-
   useEffect(() => {
     const oldGrid = [...state.grid];
     const grid = oldGrid.map((row, rowIndex) => {
@@ -138,26 +129,22 @@ export default function useGridData() {
     });
     setState((prev) => ({ ...prev, grid }));
   }, [startNode, finishNode]);
-
   const resetGrid = () => {
     setStartNode({ row: 7, col: 4 });
     setFinishNode({ row: 7, col: 40 });
-
     setState((prev) => ({
       ...prev,
-      grid: iniGrid(),
+      grid: setInitialGrid(),
       mousePressed: false,
       inProgress: false,
       isStartPickup: false,
       isFinishPickup: false,
       drawWall: true,
     }));
-
     state.grid.forEach((row) => {
       row.forEach((node) => {
         document.getElementById(`node-${node.row}-${node.col}`).className =
           "Node";
-
         if (node.lastRow) {
           document.getElementById(`node-${node.row}-${node.col}`).className +=
             " node-last-row";
@@ -170,40 +157,31 @@ export default function useGridData() {
       });
     });
   };
-
   const startVisualization = (algorithm) => {
-    if (state.inProgress || state.inProgress === "DONE") {
-      return;
-    } else {
-      switch (algorithm) {
-        case "DIJKSTRA":
-          visualizeDjikstra(state.grid, startNode, finishNode, setState);
-          break;
-        case "DEPTH-FIRST":
-          visualizeDepthFirst(state.grid, startNode, finishNode, setState);
-          break;
-        case "BREADTH-FIRST":
-          visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
-          break;
-        case "A-STAR":
-          visualizeAstar(state.grid, startNode, finishNode, setState);
-          break;
-      }
-
-      return setState((prev) => ({ ...prev, inProgress: true }));
+    switch (algorithm) {
+      case "DJIKSTRA":
+        visualizeDjikstra(state.grid, startNode, finishNode, setState);
+        break;
+      case "DEPTH-FIRST":
+        visualizeDepthFirst(state.grid, startNode, finishNode, setState);
+        break;
+      case "BREADTH-FIRST":
+        visualizeBreadthFirst(state.grid, startNode, finishNode, setState);
+        break;
+      case "A-STAR":
+        visualizeAstar(state.grid, startNode, finishNode, setState);
+        break;
     }
+    return setState((prev) => ({ ...prev, inProgress: true }));
   };
-
   const toggleWeight = () => {
     if (!state.inProgress) {
       const drawWall = !state.drawWall;
       setState((prev) => ({ ...prev, drawWall }));
     }
   };
-
   const clearWeights = () => {
     const oldGrid = [...state.grid];
-
     const grid = oldGrid.map((row) => {
       return row.map((node) => {
         const newNode = {
@@ -215,6 +193,29 @@ export default function useGridData() {
     });
 
     setState((prev) => ({ ...prev, grid, drawWall: true }));
+  };
+
+  const loadWalls = (walls) => {
+    const oldGrid = [...state.grid];
+
+    const grid = oldGrid.map((row) => {
+      return row.map((node) => {
+        for (const wall of walls) {
+          if (wall.row === node.row && wall.col === node.col) {
+            const newNode = {
+              ...node,
+              isWall: true,
+            };
+
+            return newNode;
+          }
+        }
+
+        return node;
+      });
+    });
+
+    setState((prev) => ({ ...prev, grid }));
   };
 
   return {
@@ -229,5 +230,6 @@ export default function useGridData() {
     startVisualization,
     toggleWeight,
     clearWeights,
+    loadWalls,
   };
 }
