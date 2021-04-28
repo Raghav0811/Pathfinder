@@ -21,6 +21,7 @@ export default function Grid(props) {
     startVisualization,
     toggleWeight,
     clearWeights,
+    loadWalls,
   } = useGridData();
   useEffect(() => {
     if (algorithm !== "DJIKSTRA") {
@@ -73,7 +74,10 @@ export default function Grid(props) {
             onClick={() => console.log("test")}
             inProgress={state.inProgress}
           />
-          <ToolBarDropDown inProgress={state.inProgress} />
+          <ToolBarDropDown
+            inProgress={state.inProgress}
+            loadWalls={loadWalls}
+          />
         </section>
         <span className="toolbar-right-spacer">&nbsp;</span>
         <section className="Toggle">
