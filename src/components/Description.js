@@ -14,21 +14,21 @@ export default function Description(props) {
 
   useEffect(() => {
     if (algorithm === "DJIKSTRA") {
-      Promise.resolve(axios.get("/descriptions/7")).then((response) => {
+      Promise.resolve(axios.get("/descriptions/1")).then((response) => {
         setDesc({
           algName: response.data.algorithm_name,
           algDesc: response.data.desc,
         });
       });
     } else if (algorithm === "DEPTH-FIRST") {
-      Promise.resolve(axios.get("/descriptions/8")).then((response) => {
+      Promise.resolve(axios.get("/descriptions/2")).then((response) => {
         setDesc({
           algName: response.data.algorithm_name,
           algDesc: response.data.desc,
         });
       });
     } else if (algorithm === "BREADTH-FIRST") {
-      Promise.resolve(axios.get("/descriptions/9")).then((response) => {
+      Promise.resolve(axios.get("/descriptions/3")).then((response) => {
         setDesc({
           algName: response.data.algorithm_name,
           algDesc: response.data.desc,
