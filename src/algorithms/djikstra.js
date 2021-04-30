@@ -26,6 +26,24 @@ const sortNodesByDistance = (unvisitedNodes) => {
   unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 };
 
+export const sortNodesByCost = (nodes) => {
+  nodes = nodes.sort((nodeA, nodeB) => {
+    if (nodeA.cost > nodeB.cost) return 1;
+    if (nodeA.cost < nodeB.cost) return -1;
+    if (nodeA.cost === nodeB.cost) {
+      const tiebreaker = 1 / (46 * 16);
+
+      nodeA.cost = nodeA.distanceToStart + nodeA.heuristic * (1.0 + tiebreaker);
+      nodeB.cost = nodeB.distanceToStart + nodeB.heuristic * (1.0 + tiebreaker);
+
+      if (nodeA.cost > nodeB.cost) return 1;
+      if (nodeA.cost < nodeB.cost) return -1;
+    }
+  });
+
+  return nodes;
+};
+
 // loops through the grid array and removes the nested layers of the nodes
 const removeNestedNodes = (grid) => {
   const nodes = [];
@@ -83,6 +101,37 @@ export const djikstra = (
   }
 };
 
+export const heuristic = (currentNode, endNode) => {
+  const differenceInCol = Math.pow(currentNode.col - endNode.col, 2);
+  const differenceInRow = Math.pow(currentNode.row - endNode.row, 2);
+
+  return Math.sqrt(differenceInCol + differenceInRow);
+};
+
+export const getNeighborsQueue = (node, grid) => {
+  const neighbors = [];
+
+  const { row, col } = node;
+
+  if (grid[row - 1] && !grid[row - 1][col].isWall) {
+    neighbors.push(grid[row - 1][col]);
+  }
+
+  if (grid[row][col + 1] && !grid[row][col + 1].isWall) {
+    neighbors.push(grid[row][col + 1]);
+  }
+
+  if (grid[row + 1] && !grid[row + 1][col].isWall) {
+    neighbors.push(grid[row + 1][col]);
+  }
+
+  if (grid[row][col - 1] && !grid[row][col - 1].isWall) {
+    neighbors.push(grid[row][col - 1]);
+  }
+
+  return neighbors;
+};
+
 // find the shortest path by starting at the end node and moving to node.previousNode
 export const getShortestPathNodes = (startNode, finishNode) => {
   const path = [];
@@ -103,17 +152,19 @@ export const getShortestPathNodes = (startNode, finishNode) => {
 };
 
 export const animateDijkstra = (
-  visitedNodesInOrder,
-  shortestPathNodes,
+  firstVisitedNodesInOrder,
+  firstShortestPathNodes,
+  secondVisitedNodesInOrder,
+  secondShortestPathNodes,
   setState
 ) => {
-  for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+  for (let i = 0; i <= firstVisitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
-    const node = visitedNodesInOrder[i];
+    const node = firstVisitedNodesInOrder[i];
 
-    if (i === visitedNodesInOrder.length) {
+    if (i === firstVisitedNodesInOrder.length) {
       setTimeout(() => {
-        animateShortestPath(shortestPathNodes, setState);
+        animateShortestPath(firstShortestPathNodes, setState);
       }, 10 * i);
     } else {
       setTimeout(() => {
@@ -133,10 +184,39 @@ export const animateDijkstra = (
   }
 };
 
+export const checkOpenList = (openList, newNode) => {
+  let comparison = true;
+
+  openList.forEach((node) => {
+    if (node.row === newNode.row && node.col === newNode.col) {
+      if (newNode.cost >= node.cost) {
+        comparison = false;
+        return;
+      } else {
+        node = newNode;
+        comparison = false;
+      }
+    }
+  });
+
+  return comparison;
+};
+
 export const animateShortestPath = (shortestPathNodes, setState) => {
   for (let i = 0; i < shortestPathNodes.length; i++) {
     setTimeout(() => {
       const node = shortestPathNodes[i];
+      if (node.lasRow) {
+        document.getElementById(
+          `node-${node.row}-${node.col}`
+        ).className += ` node-shortest-path-last-row`;
+      }
+
+      if (node.lastCol) {
+        document.getElementById(
+          `node-${node.row}-${node.col}`
+        ).className += ` node-shortest-path-last-col`;
+      }
       document.getElementById(`node-${node.row}-${node.col}`).className +=
         " node-shortest-path";
     }, 50 * i);
@@ -202,12 +282,11 @@ export default async function visualizeDijkstra(
     ? getShortestPathNodes(secondInterNodeObj, finishNodeObj)
     : null;
 
-  animateDijkstra(firstVisitedNodesInOrder, firstShortestPathNodes, setState);
-
-  if (secondVisitedNodesInOrder)
-    animateDijkstra(
-      secondVisitedNodesInOrder,
-      secondShortestPathNodes,
-      setState
-    );
+  animateDijkstra(
+    firstVisitedNodesInOrder,
+    firstShortestPathNodes,
+    secondVisitedNodesInOrder,
+    secondShortestPathNodes,
+    setState
+  );
 }
