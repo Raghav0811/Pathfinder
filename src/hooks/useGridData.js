@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import visualizeDjikstra from "../helpers/djikstraHelpers";
-import visualizeBreadthFirst from "../helpers/breadthFirst";
-import visualizeDepthFirst from "../helpers/depthFirst";
-import visualizeAstar from "../helpers/astar";
+import visualizeDjikstra from "../algorithms/djikstra";
+import visualizeBreadthFirst from "../algorithms/djikstra";
+import visualizeDepthFirst from "../algorithms/djikstra";
+import visualizeAstar from "../algorithms/astar";
 export default function useGridData() {
   const [startNode, setStartNode] = useState({ row: 7, col: 4 });
   const [finishNode, setFinishNode] = useState({ row: 7, col: 40 });
+  const [interNode, setInterNode] = useState(null);
+
   const setInitialGrid = () => {
     // create the initial array of node objects
     const grid = [];
@@ -33,6 +35,7 @@ export default function useGridData() {
       col,
       isStart: row === startNode.row && col === startNode.col,
       isFinish: row === finishNode.row && col === finishNode.col,
+      isInter: interNode && row === interNode.row && col === interNode.col,
       distance: Infinity,
       isVisited: false,
       isWall: false,
@@ -54,6 +57,7 @@ export default function useGridData() {
     inProgress: false,
     isStartPickup: false,
     isFinishPickup: false,
+    isInterPickup: false,
     drawWall: true,
     algorithm: "DIJKSTRA",
   });
@@ -65,25 +69,33 @@ export default function useGridData() {
       ...prev,
       isStartPickup: false,
       isFinishPickup: false,
+      isInterPickup: false,
       mousePressed: false,
     }));
   };
-  const togglePickup = (row, col, isStart, isFinish) => {
+
+  const togglePickup = (row, col, isStart, isFinish, isInter) => {
     // if a user clicks on the start node, activate the node
     if (isStart && !state.isStartPickup && !state.inProgress) {
       setState((prev) => ({ ...prev, isStartPickup: true }));
-      moveNode(row, col, isStart, isFinish);
+      moveNode(row, col, isStart, isFinish, isInter);
     } else if (isFinish && !state.isFinishPickup && !state.inProgress) {
       setState((prev) => ({ ...prev, isFinishPickup: true }));
-      moveNode(row, col, isStart, isFinish);
+      moveNode(row, col, isStart, isFinish, isInter);
+    } else if (isInter && !state.isInterPickup && !state.inProgress) {
+      setState((prev) => ({ ...prev, isInterPickup: true }));
+      moveNode(row, col, isStart, isFinish, isInter);
     }
   };
-  const moveNode = (row, col, isStartPickup, isFinishPickup) => {
+
+  const moveNode = (row, col, isStartPickup, isFinishPickup, isInterPickup) => {
     const newNode = { row, col };
     if (isStartPickup) {
       setStartNode(newNode);
-    } else {
+    } else if (isFinishPickup) {
       setFinishNode(newNode);
+    } else if (isInterPickup) {
+      setInterNode(newNode);
     }
   };
   const toggleWall = (row, col, isWall, isWeight) => {
@@ -120,18 +132,27 @@ export default function useGridData() {
           ...node,
           isStart: rowIndex === startNode.row && colIndex === startNode.col,
           isFinish: rowIndex === finishNode.row && colIndex === finishNode.col,
+          isInter:
+            interNode &&
+            rowIndex === interNode.row &&
+            colIndex === interNode.col,
         };
-        if (newNode.isStart || newNode.isFinish) {
+
+        if (newNode.isStart || newNode.isFinish || newNode.isInter) {
           newNode.isWall = false;
         }
+
         return newNode;
       });
     });
+
     setState((prev) => ({ ...prev, grid }));
-  }, [startNode, finishNode]);
+  }, [startNode, finishNode, interNode]);
+
   const resetGrid = () => {
     setStartNode({ row: 7, col: 4 });
     setFinishNode({ row: 7, col: 40 });
+    setInterNode(null);
     setState((prev) => ({
       ...prev,
       grid: setInitialGrid(),
@@ -139,6 +160,7 @@ export default function useGridData() {
       inProgress: false,
       isStartPickup: false,
       isFinishPickup: false,
+      isInterPickup: false,
       drawWall: true,
     }));
     state.grid.forEach((row) => {
@@ -160,7 +182,13 @@ export default function useGridData() {
   const startVisualization = (algorithm) => {
     switch (algorithm) {
       case "DJIKSTRA":
-        visualizeDjikstra(state.grid, startNode, finishNode, setState);
+        visualizeDjikstra(
+          state.grid,
+          startNode,
+          finishNode,
+          interNode,
+          setState
+        );
         break;
       case "DEPTH-FIRST":
         visualizeDepthFirst(state.grid, startNode, finishNode, setState);
@@ -207,6 +235,10 @@ export default function useGridData() {
               isWall: true,
             };
 
+            if (newNode.isStart || newNode.isFinish || newNode.isInter) {
+              newNode.isWall = false;
+            }
+
             return newNode;
           }
         }
@@ -214,8 +246,25 @@ export default function useGridData() {
         return node;
       });
     });
-
     setState((prev) => ({ ...prev, grid }));
+  };
+
+  const createInterNode = () => {
+    if (
+      (startNode.row === 7 && startNode.col === 22) ||
+      (finishNode.row === 7 && finishNode.col === 22)
+    ) {
+      if (
+        (startNode.row === 6 && startNode.col === 22) ||
+        (finishNode.row === 6 && finishNode.col === 22)
+      ) {
+        setInterNode({ row: 8, col: 22 });
+      } else {
+        setInterNode({ row: 6, col: 22 });
+      }
+    } else {
+      setInterNode({ row: 7, col: 22 });
+    }
   };
 
   return {
@@ -231,5 +280,6 @@ export default function useGridData() {
     toggleWeight,
     clearWeights,
     loadWalls,
+    createInterNode,
   };
 }
