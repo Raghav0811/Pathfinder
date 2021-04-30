@@ -3,7 +3,7 @@ import {
   heuristic,
   sortNodesByCost,
   checkOpenList,
-} from "../algorithms/djikstra";
+} from "./djikstra";
 
 export default function astar(grid, start, end) {
   start.distanceToStart = 0;
