@@ -49,16 +49,28 @@ export const breadthFirst = (grid, start, end) => {
 };
 
 export const animateBreadthFirst = (
-  visitedNodesInOrder,
-  shortestPathNodes,
+  firstVisitedNodesInOrder,
+  firstShortestPathNodes,
+  secondVisitedNodesInOrder,
+  secondShortestPathNodes,
   setState
 ) => {
-  for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+  for (let i = 0; i <= firstVisitedNodesInOrder.length; i++) {
     // once all nodes are animated, animate the shortest path
-    const node = visitedNodesInOrder[i];
-    if (i === visitedNodesInOrder.length) {
+    const node = firstVisitedNodesInOrder[i];
+
+    if (i === firstVisitedNodesInOrder.length) {
       setTimeout(() => {
-        animateShortestPath(shortestPathNodes, setState);
+        animateShortestPath(firstShortestPathNodes, setState);
+        if (secondVisitedNodesInOrder) {
+          animateBreadthFirst(
+            secondVisitedNodesInOrder,
+            secondShortestPathNodes,
+            null,
+            null,
+            setState
+          );
+        }
       }, 10 * i);
     } else {
       setTimeout(() => {
@@ -136,13 +148,8 @@ export default function visualizeBreadthFirst(
   animateBreadthFirst(
     firstVisitedNodesInOrder,
     firstShortestPathNodes,
+    secondVisitedNodesInOrder,
+    secondShortestPathNodes,
     setState
   );
-
-  if (secondVisitedNodesInOrder)
-    animateBreadthFirst(
-      secondVisitedNodesInOrder,
-      secondShortestPathNodes,
-      setState
-    );
 }
