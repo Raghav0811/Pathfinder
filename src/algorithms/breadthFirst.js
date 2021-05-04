@@ -1,7 +1,4 @@
-import {
-  getShortestPathNodes,
-  animateShortestPath,
-} from "../helpers/djikstraHelpers";
+import { getShortestPathNodes, animateShortestPath } from "./djikstra";
 
 export const getNeighborsBreadthFirst = (node, grid) => {
   const neighbors = [];
@@ -75,7 +72,6 @@ export const animateBreadthFirst = (
           document.getElementById(`node-${node.row}-${node.col}`).className +=
             " node-visited-last-col";
         }
-
         document.getElementById(`node-${node.row}-${node.col}`).className +=
           " node-visited";
       }, 10 * i);
@@ -87,12 +83,66 @@ export default function visualizeBreadthFirst(
   grid,
   startNode,
   finishNode,
+  interNode,
   setState
 ) {
-  const startNodeObj = grid[startNode.row][startNode.col];
-  const finishNodeObj = grid[finishNode.row][finishNode.col];
-  const visitedNodesInOrder = breadthFirst(grid, startNodeObj, finishNodeObj);
-  const shortestPathNodes = getShortestPathNodes(finishNodeObj);
+  const firstGrid = grid.map((row) => {
+    return row.map((node) => {
+      const newNode = {
+        ...node,
+        isVisited: false,
+      };
 
-  animateBreadthFirst(visitedNodesInOrder, shortestPathNodes, setState);
+      return newNode;
+    });
+  });
+
+  const secondGrid = grid.map((row) => {
+    return row.map((node) => {
+      const newNode = {
+        ...node,
+        isVisited: false,
+      };
+
+      return newNode;
+    });
+  });
+
+  const startNodeObj = firstGrid[startNode.row][startNode.col];
+  const firstInterNodeObj = interNode
+    ? firstGrid[interNode.row][interNode.col]
+    : null;
+  const secondInterNodeObj = interNode
+    ? secondGrid[interNode.row][interNode.col]
+    : null;
+  const finishNodeObj = interNode
+    ? secondGrid[finishNode.row][finishNode.col]
+    : firstGrid[finishNode.row][finishNode.col];
+
+  const firstVisitedNodesInOrder = interNode
+    ? breadthFirst(firstGrid, startNodeObj, firstInterNodeObj)
+    : breadthFirst(firstGrid, startNodeObj, finishNodeObj);
+  const secondVisitedNodesInOrder = interNode
+    ? breadthFirst(secondGrid, secondInterNodeObj, finishNodeObj)
+    : null;
+
+  const firstShortestPathNodes = interNode
+    ? getShortestPathNodes(startNodeObj, firstInterNodeObj)
+    : getShortestPathNodes(startNodeObj, finishNodeObj);
+  const secondShortestPathNodes = interNode
+    ? getShortestPathNodes(secondInterNodeObj, finishNodeObj)
+    : null;
+
+  animateBreadthFirst(
+    firstVisitedNodesInOrder,
+    firstShortestPathNodes,
+    setState
+  );
+
+  if (secondVisitedNodesInOrder)
+    animateBreadthFirst(
+      secondVisitedNodesInOrder,
+      secondShortestPathNodes,
+      setState
+    );
 }
