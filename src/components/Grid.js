@@ -5,11 +5,13 @@ import BasicButton from "./BasicButton";
 import ToolBarDropDown from "./ToolBarDropDown";
 import Toggle from "./Toggle";
 import useGridData from "../hooks/useGridData";
+import useMaze from "../hooks/useMaze";
 import "../Styles/Grid.css";
 import "../Styles/ToolBar.css";
 
 export default function Grid(props) {
   const { algorithm, toggleCounter, toggleNavDisable } = props;
+
   const {
     state,
     interNode,
@@ -21,15 +23,24 @@ export default function Grid(props) {
     resetGrid,
     startVisualization,
     toggleWeight,
-    clearWeights,
+    clearGrid,
     loadWalls,
     createInterNode,
   } = useGridData();
+
+  const { mazeWalls, generateMazeWalls, generateMaze } = useMaze();
+
   useEffect(() => {
-    if (algorithm !== "DJIKSTRA") {
-      clearWeights();
+    const maze = generateMaze(state.grid, mazeWalls);
+    loadWalls(maze, "MAZE");
+  }, [mazeWalls]);
+
+  useEffect(() => {
+    if (algorithm === "BREADTH-FIRST" || algorithm === "DEPTH-FIRST") {
+      clearGrid("WEIGHTS");
     }
   }, [algorithm]);
+
   useEffect(() => {
     state.inProgress ? toggleNavDisable(true) : toggleNavDisable(false);
   }, [state.inProgress]);
@@ -71,10 +82,12 @@ export default function Grid(props) {
             interNode={interNode}
           />
           <BasicButton
-            text="Generate Maze"
+            text="&nbsp;Generate Maze&nbsp;"
             size="small"
             color="secondary"
-            onClick={() => console.log("test")}
+            onClick={() =>
+              generateMazeWalls(state.grid, 0, 14, 0, 44, `horizontal`, null)
+            }
             inProgress={state.inProgress}
           />
           <ToolBarDropDown

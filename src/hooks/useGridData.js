@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import visualizeDjikstra from "../algorithms/djikstra";
-import visualizeBreadthFirst from "../algorithms/djikstra";
-import visualizeDepthFirst from "../algorithms/djikstra";
-import visualizeAstar from "../algorithms/astar";
+import djikstra from "../algorithms/djikstra";
+import breadthFirst from "../algorithms/breadthFirst";
+import depthFirst from "../algorithms/depthFirst";
+import astar from "../algorithms/astar";
+import visualizeAlgorithm from "../algorithms/algorithmAnimations";
+
 export default function useGridData() {
   const [startNode, setStartNode] = useState({ row: 7, col: 4 });
   const [finishNode, setFinishNode] = useState({ row: 7, col: 40 });
@@ -182,7 +184,7 @@ export default function useGridData() {
   const startVisualization = (algorithm) => {
     switch (algorithm) {
       case "DJIKSTRA":
-        visualizeDjikstra(
+        visualizeAlgorithm(
           state.grid,
           startNode,
           finishNode,
@@ -191,7 +193,7 @@ export default function useGridData() {
         );
         break;
       case "DEPTH-FIRST":
-        visualizeDepthFirst(
+        visualizeAlgorithm(
           state.grid,
           startNode,
           finishNode,
@@ -200,7 +202,7 @@ export default function useGridData() {
         );
         break;
       case "BREADTH-FIRST":
-        visualizeBreadthFirst(
+        visualizeAlgorithm(
           state.grid,
           startNode,
           finishNode,
@@ -209,7 +211,23 @@ export default function useGridData() {
         );
         break;
       case "A-STAR":
-        visualizeAstar(state.grid, startNode, finishNode, interNode, setState);
+        visualizeAlgorithm(
+          state.grid,
+          startNode,
+          finishNode,
+          interNode,
+          setState
+        );
+        break;
+      default:
+        visualizeAlgorithm(
+          djikstra,
+          state.grid,
+          startNode,
+          finishNode,
+          interNode,
+          setState
+        );
         break;
     }
     return setState((prev) => ({ ...prev, inProgress: true }));
