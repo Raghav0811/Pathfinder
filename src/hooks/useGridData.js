@@ -209,7 +209,7 @@ export default function useGridData() {
         );
         break;
       case "A-STAR":
-        visualizeAstar(state.grid, startNode, finishNode, setState);
+        visualizeAstar(state.grid, startNode, finishNode, interNode, setState);
         break;
     }
     return setState((prev) => ({ ...prev, inProgress: true }));

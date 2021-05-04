@@ -151,7 +151,7 @@ export const getShortestPathNodes = (startNode, finishNode) => {
   return path;
 };
 
-export const animateDijkstra = (
+export const animateDjikstra = (
   firstVisitedNodesInOrder,
   firstShortestPathNodes,
   secondVisitedNodesInOrder,
@@ -228,7 +228,7 @@ export const animateShortestPath = (shortestPathNodes, setState) => {
   }
 };
 
-export default async function visualizeDijkstra(
+export default async function visualizeDjikstra(
   grid,
   startNode,
   finishNode,
@@ -282,7 +282,7 @@ export default async function visualizeDijkstra(
     ? getShortestPathNodes(secondInterNodeObj, finishNodeObj)
     : null;
 
-  animateDijkstra(
+  animateDjikstra(
     firstVisitedNodesInOrder,
     firstShortestPathNodes,
     secondVisitedNodesInOrder,
