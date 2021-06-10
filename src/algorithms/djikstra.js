@@ -26,23 +26,23 @@ const sortNodesByDistance = (unvisitedNodes) => {
   unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 };
 
-export const sortNodesByCost = (nodes) => {
-  nodes = nodes.sort((nodeA, nodeB) => {
-    if (nodeA.cost > nodeB.cost) return 1;
-    if (nodeA.cost < nodeB.cost) return -1;
-    if (nodeA.cost === nodeB.cost) {
-      const tiebreaker = 1 / (46 * 16);
+// export const sortNodesByCost = (nodes) => {
+//   nodes = nodes.sort((nodeA, nodeB) => {
+//     if (nodeA.cost > nodeB.cost) return 1;
+//     if (nodeA.cost < nodeB.cost) return -1;
+//     if (nodeA.cost === nodeB.cost) {
+//       const tiebreaker = 1 / (46 * 16);
 
-      nodeA.cost = nodeA.distanceToStart + nodeA.heuristic * (1.0 + tiebreaker);
-      nodeB.cost = nodeB.distanceToStart + nodeB.heuristic * (1.0 + tiebreaker);
+//       nodeA.cost = nodeA.distanceToStart + nodeA.heuristic * (1.0 + tiebreaker);
+//       nodeB.cost = nodeB.distanceToStart + nodeB.heuristic * (1.0 + tiebreaker);
 
-      if (nodeA.cost > nodeB.cost) return 1;
-      if (nodeA.cost < nodeB.cost) return -1;
-    }
-  });
+//       if (nodeA.cost > nodeB.cost) return 1;
+//       if (nodeA.cost < nodeB.cost) return -1;
+//     }
+//   });
 
-  return nodes;
-};
+//   return nodes;
+// };
 
 // loops through the grid array and removes the nested layers of the nodes
 const removeNestedNodes = (grid) => {

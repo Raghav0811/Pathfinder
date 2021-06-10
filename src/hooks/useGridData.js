@@ -6,21 +6,30 @@ import astar from "../algorithms/astar";
 import visualizeAlgorithm from "../algorithms/algorithmAnimations";
 
 export default function useGridData() {
-  const [startNode, setStartNode] = useState({ row: 7, col: 4 });
-  const [finishNode, setFinishNode] = useState({ row: 7, col: 40 });
+  const START_NODE_ROW = 7;
+  const START_NODE_COL = 9;
+  const FINISH_NODE_ROW = 7;
+  const FINISH_NODE_COL = 35;
+  const INTER_NODE_ROW = 7;
+  const INTER_NODE_COL = 22;
+
+  const [startNode, setStartNode] = useState({
+    row: START_NODE_ROW,
+    col: START_NODE_COL,
+  });
+  const [finishNode, setFinishNode] = useState({
+    row: FINISH_NODE_ROW,
+    col: FINISH_NODE_COL,
+  });
   const [interNode, setInterNode] = useState(null);
 
   const setInitialGrid = () => {
-    // create the initial array of node objects
     const grid = [];
 
-    // for each row in the grid...
     for (let row = 0; row < 15; row++) {
       const currentRow = [];
 
-      // for each column in the row...
       for (let col = 0; col < 45; col++) {
-        // create node and push
         currentRow.push(createNode(row, col));
       }
 
@@ -30,7 +39,6 @@ export default function useGridData() {
     return grid;
   };
 
-  // creates the nodes that are pushed into the initial grid array
   const createNode = (row, col) => {
     const node = {
       row,
@@ -63,9 +71,11 @@ export default function useGridData() {
     drawWall: true,
     algorithm: "DIJKSTRA",
   });
+
   const mouseDown = (row, col) => {
     setState((prev) => ({ ...prev, mousePressed: true }));
   };
+
   const mouseUp = (row, col) => {
     setState((prev) => ({
       ...prev,
@@ -92,6 +102,7 @@ export default function useGridData() {
 
   const moveNode = (row, col, isStartPickup, isFinishPickup, isInterPickup) => {
     const newNode = { row, col };
+
     if (isStartPickup) {
       setStartNode(newNode);
     } else if (isFinishPickup) {
@@ -100,34 +111,44 @@ export default function useGridData() {
       setInterNode(newNode);
     }
   };
+
   const toggleWall = (row, col, isWall, isWeight) => {
-    //if the user clicks on an empty square, create a wall
+    //if the user clicks on an empty square, draw a wall
     if (!state.inProgress && state.drawWall) {
       const newNode = {
         ...state.grid[row][col],
         isWall,
         isWeight: false,
       };
+
       const newRow = [...state.grid[row]];
       newRow[col] = newNode;
+
       const grid = [...state.grid];
       grid[row] = newRow;
+
       setState((prev) => ({ ...prev, grid }));
     } else if (!state.inProgress && !state.drawWall) {
+      // otherwise, draw a weight
       const newNode = {
         ...state.grid[row][col],
         isWeight,
         isWall: false,
       };
+
       const newRow = [...state.grid[row]];
       newRow[col] = newNode;
+
       const grid = [...state.grid];
       grid[row] = newRow;
+
       setState((prev) => ({ ...prev, grid }));
     }
   };
+
   useEffect(() => {
     const oldGrid = [...state.grid];
+
     const grid = oldGrid.map((row, rowIndex) => {
       return row.map((node, colIndex) => {
         const newNode = {
@@ -152,9 +173,10 @@ export default function useGridData() {
   }, [startNode, finishNode, interNode]);
 
   const resetGrid = () => {
-    setStartNode({ row: 7, col: 4 });
-    setFinishNode({ row: 7, col: 40 });
+    setStartNode({ row: START_NODE_ROW, col: START_NODE_COL });
+    setFinishNode({ row: FINISH_NODE_ROW, col: FINISH_NODE_COL });
     setInterNode(null);
+
     setState((prev) => ({
       ...prev,
       grid: setInitialGrid(),
@@ -165,10 +187,12 @@ export default function useGridData() {
       isInterPickup: false,
       drawWall: true,
     }));
+
     state.grid.forEach((row) => {
       row.forEach((node) => {
         document.getElementById(`node-${node.row}-${node.col}`).className =
           "Node";
+
         if (node.lastRow) {
           document.getElementById(`node-${node.row}-${node.col}`).className +=
             " node-last-row";
@@ -181,10 +205,12 @@ export default function useGridData() {
       });
     });
   };
+
   const startVisualization = (algorithm) => {
     switch (algorithm) {
       case "DJIKSTRA":
         visualizeAlgorithm(
+          djikstra,
           state.grid,
           startNode,
           finishNode,
@@ -194,6 +220,7 @@ export default function useGridData() {
         break;
       case "DEPTH-FIRST":
         visualizeAlgorithm(
+          depthFirst,
           state.grid,
           startNode,
           finishNode,
@@ -203,6 +230,7 @@ export default function useGridData() {
         break;
       case "BREADTH-FIRST":
         visualizeAlgorithm(
+          breadthFirst,
           state.grid,
           startNode,
           finishNode,
@@ -212,6 +240,7 @@ export default function useGridData() {
         break;
       case "A-STAR":
         visualizeAlgorithm(
+          astar,
           state.grid,
           startNode,
           finishNode,
@@ -230,22 +259,31 @@ export default function useGridData() {
         );
         break;
     }
+
     return setState((prev) => ({ ...prev, inProgress: true }));
   };
+
   const toggleWeight = () => {
     if (!state.inProgress) {
       const drawWall = !state.drawWall;
       setState((prev) => ({ ...prev, drawWall }));
     }
   };
-  const clearWeights = () => {
+
+  const clearGrid = (type) => {
     const oldGrid = [...state.grid];
+
     const grid = oldGrid.map((row) => {
       return row.map((node) => {
-        const newNode = {
-          ...node,
-          isWeight: false,
-        };
+        const newNode = { ...node };
+
+        if (type === "WALLS") {
+          newNode.isWall = false;
+        } else {
+          // only other option is to clear weights
+          newNode.isWeight = false;
+        }
+
         return newNode;
       });
     });
@@ -253,29 +291,53 @@ export default function useGridData() {
     setState((prev) => ({ ...prev, grid, drawWall: true }));
   };
 
-  const loadWalls = (walls) => {
+  const loadWalls = (walls, type) => {
     const oldGrid = [...state.grid];
+    let grid = [];
+    const mazeWalls = [];
 
-    const grid = oldGrid.map((row) => {
+    if (type === "MAZE") {
+      for (const row of walls) {
+        for (const node of row) {
+          if (node.isWall) mazeWalls.push(node);
+        }
+      }
+    }
+
+    grid = oldGrid.map((row) => {
       return row.map((node) => {
-        for (const wall of walls) {
-          if (wall.row === node.row && wall.col === node.col) {
-            const newNode = {
-              ...node,
-              isWall: true,
-            };
+        const newNode = {
+          ...node,
+          isWall: false,
+          isWeight: false,
+        };
 
-            if (newNode.isStart || newNode.isFinish || newNode.isInter) {
-              newNode.isWall = false;
+        if (type === "MAZE") {
+          for (const wall of mazeWalls) {
+            if (wall.row === node.row && wall.col === node.col) {
+              newNode.isWall = true;
             }
-
-            return newNode;
+          }
+        } else {
+          // only other option is a map
+          for (const row of walls) {
+            for (const col of row.cols) {
+              if (
+                row.row_num === node.row &&
+                col === node.col &&
+                !node.isStart &&
+                !node.isFinish &&
+                !node.isInter
+              )
+                newNode.isWall = true;
+            }
           }
         }
 
-        return node;
+        return newNode;
       });
     });
+
     setState((prev) => ({ ...prev, grid }));
   };
 
@@ -288,18 +350,27 @@ export default function useGridData() {
         (startNode.row === 6 && startNode.col === 22) ||
         (finishNode.row === 6 && finishNode.col === 22)
       ) {
-        setInterNode({ row: 8, col: 22 });
+        setInterNode({ row: INTER_NODE_ROW + 1, col: INTER_NODE_COL });
+        document.getElementById(
+          `node-${INTER_NODE_ROW + 1}-${INTER_NODE_COL}`
+        ).className += " node-inter";
       } else {
-        setInterNode({ row: 6, col: 22 });
+        setInterNode({ row: INTER_NODE_ROW - 1, col: INTER_NODE_COL });
+        document.getElementById(
+          `node-${INTER_NODE_ROW - 1}-${INTER_NODE_COL}`
+        ).className += " node-inter";
       }
     } else {
-      setInterNode({ row: 7, col: 22 });
+      setInterNode({ row: INTER_NODE_ROW, col: INTER_NODE_COL });
+      document.getElementById(
+        `node-${INTER_NODE_ROW}-${INTER_NODE_COL}`
+      ).className += " node-inter";
     }
   };
 
   return {
     state,
-    setState,
+    interNode,
     mouseDown,
     mouseUp,
     togglePickup,
@@ -308,7 +379,7 @@ export default function useGridData() {
     resetGrid,
     startVisualization,
     toggleWeight,
-    clearWeights,
+    clearGrid,
     loadWalls,
     createInterNode,
   };
